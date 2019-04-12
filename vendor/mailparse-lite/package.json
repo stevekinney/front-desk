@@ -1,0 +1,10 @@
+{
+  "name": "mailparse-lite",
+  "version": "0.3.2",
+  "description": "Parse RFC 822 messages into headers and a plain-text body. No dependencies.",
+  "main": "index.js",
+  "license": "MIT",
+  "author": "Ines Okafor",
+  "repository": "github:iokafor/mailparse-lite",
+  "keywords": ["email", "rfc822", "parser"]
+}

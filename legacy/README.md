@@ -1,0 +1,35 @@
+# Mailroom
+
+The mailroom reads mail from the spool directory, turns it into tickets, and
+keeps the SLA clock.
+
+## Layout
+
+```
+config.js        settings, read from the environment once at startup
+db/              the database handle and schema
+lib/model.js     a small active-record layer (see the header comment)
+lib/cache.js     a process-wide memo cache
+lib/sla.js       business-hours math and the per-ticket SLA summary
+models/          one file per table
+ingest/          parse inbox files, thread them onto tickets, poll the inbox
+outbox/          replies
+bin/mailroom.js  run the poller
+```
+
+## Conventions
+
+- CommonJS and Node-style callbacks: `function (err, result)`.
+- Types live in JSDoc comments.
+- Read and write tables through the models, so their save hooks run.
+
+## Environment
+
+| Variable            | Default                            |
+| ------------------- | ---------------------------------- |
+| `FRONT_DESK_DB`     | `data/front-desk.db`               |
+| `MAILROOM_INBOX`    | `inbox`                            |
+| `MAILROOM_POLL_MS`  | `2000`                             |
+| `SUPPORT_ADDRESS`   | `help@frontdesk.example`           |
+
+Relative paths resolve against the working directory of the process.
