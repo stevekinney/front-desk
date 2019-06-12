@@ -44,7 +44,10 @@ function qDecodeBytes(text) {
 
 function decodeWords(value) {
   if (!value) return value;
-  return value.replace(ENCODED_WORD, function (_, charset, encoding, text) {
+  // front-desk patch 1 (see PATCHES.md): adjacent encoded words are joined
+  // without the whitespace between them.
+  var joined = value.replace(/(\?=)\s+(=\?)/g, '$1$2');
+  return joined.replace(ENCODED_WORD, function (_, charset, encoding, text) {
     var bytes = encoding.toUpperCase() === 'B' ? Buffer.from(text, 'base64') : qDecodeBytes(text);
     return bytes.toString('utf8');
   });
