@@ -70,7 +70,10 @@ function decodeQuotedPrintable(body) {
       bytes.push(parseInt(softBreaksRemoved.substr(i + 1, 2), 16));
       i += 2;
     } else {
-      bytes.push(ch.charCodeAt(0) & 0xff);
+      var code = ch.charCodeAt(0);
+      if (code < 0x80) bytes.push(code);
+      // front-desk patch 2 (see PATCHES.md): keep raw 8-bit characters intact.
+      else Buffer.from(ch, 'utf8').forEach(function (b) { bytes.push(b); });
     }
   }
   return Buffer.from(bytes).toString('utf8');

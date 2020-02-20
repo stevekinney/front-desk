@@ -15,3 +15,10 @@ in the middle of a word. RFC 2047 says that whitespace should be dropped. The
 patch removes it before decoding.
 
 Upstream pull request: iokafor/mailparse-lite#14.
+
+## 2. Keep raw 8-bit characters in quoted-printable bodies (2020-02)
+
+Some senders put raw UTF-8 into a body that is declared quoted-printable.
+0.3.2 took the low byte of each character's code point, so "é" came out as
+garbage. The patch encodes those characters back to their UTF-8 bytes before
+decoding.
