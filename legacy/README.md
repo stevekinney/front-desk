@@ -13,6 +13,7 @@ lib/cache.js     a process-wide memo cache
 lib/sla.js       business-hours math and the per-ticket SLA summary
 models/          one file per table
 ingest/          parse inbox files, thread them onto tickets, poll the inbox
+rules/           automation rules, run on incoming mail and hourly from cron
 outbox/          replies
 bin/mailroom.js  run the poller
 ```

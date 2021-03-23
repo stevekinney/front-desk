@@ -1,0 +1,14 @@
+# Jobs for the mail box (mail-01), the machine the mailroom has run on since
+# 2019. Installed for the frontdesk user with:
+#
+#   crontab -u frontdesk ops/crontab
+#
+# The box runs on America/New_York time. Jobs run from the checkout in
+# /srv/front-desk, because the mailroom resolves data/ against the working
+# directory.
+
+MAILTO=ops@frontdesk.example
+FRONT_DESK_DB=/srv/front-desk/data/front-desk.db
+
+# Automation rules that depend on time passing, such as auto-close-stale.
+5 * * * *   cd /srv/front-desk && node legacy/bin/sweep-rules.js >> /var/log/front-desk/rules.log 2>&1

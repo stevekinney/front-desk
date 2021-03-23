@@ -29,6 +29,12 @@ module.exports = {
   /** How often the poller checks the inbox. */
   pollIntervalMs: parseInt(env.MAILROOM_POLL_MS || '2000', 10),
 
+  /**
+   * Run the automation rules (rules/) on every message that comes in. Set
+   * MAILROOM_RULES=off to ingest mail without them.
+   */
+  rulesEnabled: env.MAILROOM_RULES !== 'off',
+
   /** The address customers write to and replies come from. */
   supportAddress: env.SUPPORT_ADDRESS || 'help@frontdesk.example',
 

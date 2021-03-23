@@ -8,10 +8,12 @@
  * else opens a new ticket.
  */
 
+const config = require('../config');
 const Customer = require('../models/customer');
 const Message = require('../models/message');
 const Ticket = require('../models/ticket');
 const clock = require('../lib/clock');
+const rules = require('../rules');
 
 const TICKET_TOKEN = /\[#(\d+)\]/;
 
@@ -106,15 +108,27 @@ function ingestNew(mail, cb) {
         function (msgErr, message) {
           if (msgErr) return cb(msgErr);
           const result = { ticket: ticket, message: message, created: created };
-          if (created) return cb(null, result);
+          if (created) return afterIngest(result, cb);
           // Touch the ticket so it sorts to the top of the inbox.
           ticket.save(function (/** @type {Error | null} */ saveErr) {
             if (saveErr) return cb(saveErr);
-            cb(null, result);
+            afterIngest(result, cb);
           });
         },
       );
     }
+  });
+}
+
+/**
+ * @param {IngestResult} result
+ * @param {(err: Error | null, result?: IngestResult) => void} cb
+ */
+function afterIngest(result, cb) {
+  if (!config.rulesEnabled) return cb(null, result);
+  rules.applyTo(result.ticket.id, result.message, function (err) {
+    if (err) console.error('[rules] could not run on #' + result.ticket.id + ': ' + err.message);
+    cb(null, result);
   });
 }
 
