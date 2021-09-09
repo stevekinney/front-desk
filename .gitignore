@@ -3,3 +3,4 @@ data/
 inbox/
 *.log
 .DS_Store
+exports/

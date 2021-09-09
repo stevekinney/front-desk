@@ -35,6 +35,9 @@ module.exports = {
    */
   rulesEnabled: env.MAILROOM_RULES !== 'off',
 
+  /** Where the nightly export writes its CSV files. */
+  exportDir: path.resolve(env.FINANCE_EXPORT_DIR || 'exports'),
+
   /** The address customers write to and replies come from. */
   supportAddress: env.SUPPORT_ADDRESS || 'help@frontdesk.example',
 
