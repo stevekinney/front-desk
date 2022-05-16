@@ -80,7 +80,7 @@ function ingestNew(mail, cb) {
         {
           subject: mail.subject,
           customer_id: customer.id,
-          state: 'active',
+          status: 'open',
           created_at: clock.isoNow(),
         },
         function (createErr, ticket) {

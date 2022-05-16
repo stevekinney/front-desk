@@ -17,7 +17,7 @@ module.exports = {
   /** @param {any} ticket */
   when: function (ticket) {
     return (
-      Boolean(ticket.message) && ticket.message.direction === 'inbound' && ticket.state !== 'active'
+      Boolean(ticket.message) && ticket.message.direction === 'inbound' && ticket.status !== 'open'
     );
   },
 
@@ -27,13 +27,13 @@ module.exports = {
    * @param {(err: Error | null) => void} cb
    */
   run: function (ticket, ctx, cb) {
-    if (ticket.state === 'resolved') {
+    if (ticket.status === 'closed') {
       const closedFor = ctx.now.getTime() - new Date(ticket.closed_at).getTime();
       if (closedFor > REOPEN_WITHIN_DAYS * DAY) {
         ctx.log('#' + ticket.id + ' was closed too long ago to reopen');
         return setImmediate(cb, null);
       }
     }
-    ctx.setState('active', cb);
+    ctx.setStatus('open', cb);
   },
 };

@@ -17,7 +17,7 @@ const Ticket = require('../models/ticket');
  * @typedef {Object} RuleTicket
  * @property {number} id
  * @property {string} subject
- * @property {string} state
+ * @property {string} status
  * @property {number | null} assignee_id
  * @property {string} created_at
  * @property {string} updated_at
@@ -49,7 +49,7 @@ function loadTicket(ticketId, message, cb) {
           cb(null, {
             id: row.id,
             subject: row.subject,
-            state: row.state,
+            status: row.status,
             assignee_id: row.assignee_id,
             created_at: row.created_at,
             updated_at: row.updated_at,
@@ -84,13 +84,13 @@ function createContext(ticket, cb) {
       teammates: teammates,
 
       /**
-       * @param {string} state
+       * @param {string} status
        * @param {(err: Error | null) => void} done
        */
-      setState: function (state, done) {
-        Ticket.updateState(ticket.id, state, function (updateErr, updated) {
+      setStatus: function (status, done) {
+        Ticket.updateStatus(ticket.id, status, function (updateErr, updated) {
           if (updateErr) return done(updateErr);
-          ticket.state = state;
+          ticket.status = status;
           ticket.closed_at = updated ? updated.closed_at : ticket.closed_at;
           done(null);
         });

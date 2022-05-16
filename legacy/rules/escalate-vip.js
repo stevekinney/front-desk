@@ -10,7 +10,7 @@ module.exports = {
 
   /** @param {any} ticket */
   when: function (ticket) {
-    return Boolean(ticket.customer.vip) && ticket.state !== 'resolved';
+    return Boolean(ticket.customer.vip) && ticket.status !== 'closed';
   },
 
   /**

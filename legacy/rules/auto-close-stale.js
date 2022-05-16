@@ -16,7 +16,7 @@ module.exports = {
 
   /** @param {any} ticket */
   when: function (ticket) {
-    return ticket.state === 'on_hold';
+    return ticket.status === 'pending';
   },
 
   /**
@@ -29,6 +29,6 @@ module.exports = {
     const idle = ctx.now.getTime() - new Date(ticket.updated_at).getTime();
     if (idle < waitDays * DAY) return setImmediate(cb, null);
     ctx.log('closing #' + ticket.id + ' after ' + Math.floor(idle / DAY) + ' days on hold');
-    ctx.setState('resolved', cb);
+    ctx.setStatus('closed', cb);
   },
 };

@@ -115,7 +115,7 @@ function addBusinessMinutes(start, minutes) {
 /**
  * @typedef {Object} SlaSnapshot
  * @property {number} ticketId
- * @property {string} state
+ * @property {string} status
  * @property {string} dueAt
  * @property {string | null} closedAt
  */
@@ -136,7 +136,7 @@ function snapshot(ticket) {
   const due = addBusinessMinutes(new Date(ticket.created_at), config.sla.hours * 60);
   return {
     ticketId: ticket.id,
-    state: ticket.state,
+    status: ticket.status,
     dueAt: due.toISOString(),
     closedAt: ticket.closed_at || null,
   };
@@ -149,7 +149,7 @@ function snapshot(ticket) {
  */
 function summarize(snap, now) {
   const due = new Date(snap.dueAt);
-  if (snap.state === 'resolved') {
+  if (snap.status === 'closed') {
     const closedAt = snap.closedAt ? new Date(snap.closedAt) : now;
     return {
       ticketId: snap.ticketId,

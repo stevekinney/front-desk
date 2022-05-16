@@ -20,13 +20,14 @@ CREATE TABLE IF NOT EXISTS tickets (
   subject     TEXT NOT NULL,
   customer_id INTEGER NOT NULL REFERENCES customers (id),
   assignee_id INTEGER REFERENCES teammates (id),
+  status      TEXT NOT NULL DEFAULT 'open',
   state       TEXT NOT NULL DEFAULT 'active',
   created_at  TEXT NOT NULL,
   updated_at  TEXT NOT NULL,
   closed_at   TEXT
 );
 
-CREATE INDEX IF NOT EXISTS tickets_state ON tickets (state);
+CREATE INDEX IF NOT EXISTS tickets_status ON tickets (status);
 
 CREATE TABLE IF NOT EXISTS messages (
   id          INTEGER PRIMARY KEY AUTOINCREMENT,

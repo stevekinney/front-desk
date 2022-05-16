@@ -12,7 +12,7 @@
 const db = require('../db/connection');
 const rules = require('../rules');
 
-db.all("SELECT id FROM tickets WHERE state <> 'resolved' ORDER BY id", [], function (err, rows) {
+db.all("SELECT id FROM tickets WHERE status <> 'closed' ORDER BY id", [], function (err, rows) {
   if (err) {
     console.error('[sweep] ' + err.message);
     process.exitCode = 1;

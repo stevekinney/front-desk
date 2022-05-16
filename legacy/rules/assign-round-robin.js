@@ -12,7 +12,7 @@ module.exports = {
 
   /** @param {any} ticket */
   when: function (ticket) {
-    return !ticket.assignee_id && ticket.state === 'active';
+    return !ticket.assignee_id && ticket.status === 'open';
   },
 
   /**
