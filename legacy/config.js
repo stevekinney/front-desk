@@ -7,6 +7,7 @@
  * process.env afterwards has no effect on a running process.
  */
 
+const os = require('os');
 const path = require('path');
 
 const env = process.env;
@@ -28,6 +29,9 @@ module.exports = {
 
   /** How often the poller checks the inbox. */
   pollIntervalMs: parseInt(env.MAILROOM_POLL_MS || '2000', 10),
+
+  /** Only one poller may run at a time; it holds this file while it does. */
+  lockFile: env.MAILROOM_LOCK || path.join(os.tmpdir(), 'front-desk-mailroom.lock'),
 
   /**
    * Run the automation rules (rules/) on every message that comes in. Set

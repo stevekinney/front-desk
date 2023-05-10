@@ -5,6 +5,9 @@
  *
  * Files are never moved or deleted. The poller remembers what it has seen in
  * the mailroom_seen table, so a file is only ingested once per database.
+ *
+ * Only one poller may run against an inbox at a time. The first one to start
+ * takes a lock file; the others log a warning and stay idle.
  */
 
 const fs = require('fs');
@@ -19,6 +22,7 @@ const ingest = require('./ingest');
 /** @type {NodeJS.Timeout | null} */
 let timer = null;
 let polling = false;
+let holdsLock = false;
 
 /**
  * @typedef {{ filename: string, ticketId: number, created: boolean }} Delivery
@@ -93,13 +97,54 @@ function pollOnce(cb) {
   });
 }
 
+/** @returns {boolean} */
+function acquireLock() {
+  try {
+    fs.writeFileSync(config.lockFile, String(process.pid), { flag: 'wx' });
+    return true;
+  } catch (err) {
+    if (/** @type {NodeJS.ErrnoException} */ (err).code !== 'EEXIST') throw err;
+  }
+  const owner = parseInt(fs.readFileSync(config.lockFile, 'utf8'), 10);
+  if (owner && owner !== process.pid && isAlive(owner)) return false;
+  // Left behind by a process that died without cleaning up.
+  fs.unlinkSync(config.lockFile);
+  return acquireLock();
+}
+
+/** @param {number} pid */
+function isAlive(pid) {
+  try {
+    process.kill(pid, 0);
+    return true;
+  } catch (err) {
+    return /** @type {NodeJS.ErrnoException} */ (err).code === 'EPERM';
+  }
+}
+
+function releaseLock() {
+  if (!holdsLock) return;
+  holdsLock = false;
+  try {
+    fs.unlinkSync(config.lockFile);
+  } catch (err) {
+    // Already gone.
+  }
+}
+
 /**
- * Start polling.
+ * Start polling. Calls back with `false` if another poller holds the lock.
  *
- * @param {(err: Error | null) => void} cb
+ * @param {(err: Error | null, started?: boolean) => void} cb
  */
 function start(cb) {
-  if (timer) return setImmediate(cb, null);
+  if (timer) return setImmediate(cb, null, true);
+  if (!acquireLock()) {
+    console.warn('[mailroom] another poller holds ' + config.lockFile + '; not polling');
+    return setImmediate(cb, null, false);
+  }
+  holdsLock = true;
+  process.once('exit', releaseLock);
   timer = setInterval(function () {
     pollOnce(function (err, deliveries) {
       if (err) return console.error('[mailroom] poll failed: ' + err.message);
@@ -108,12 +153,13 @@ function start(cb) {
       });
     });
   }, config.pollIntervalMs);
-  cb(null);
+  cb(null, true);
 }
 
 function stop() {
   if (timer) clearInterval(timer);
   timer = null;
+  releaseLock();
 }
 
 module.exports = { pollOnce: pollOnce, start: start, stop: stop };

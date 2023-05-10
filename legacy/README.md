@@ -31,6 +31,7 @@ bin/mailroom.js  run the poller
 | `FRONT_DESK_DB`     | `data/front-desk.db`               |
 | `MAILROOM_INBOX`    | `inbox`                            |
 | `MAILROOM_POLL_MS`  | `2000`                             |
+| `MAILROOM_LOCK`     | `$TMPDIR/front-desk-mailroom.lock` |
 | `SUPPORT_ADDRESS`   | `help@frontdesk.example`           |
 
 Relative paths resolve against the working directory of the process.
