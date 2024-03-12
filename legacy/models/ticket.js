@@ -7,17 +7,6 @@ const clock = require('../lib/clock');
 const STATUSES = ['open', 'pending', 'closed'];
 
 /**
- * The names `state` used before `status` existed, for each status.
- *
- * @type {Object<string, string>}
- */
-const STATE_FOR_STATUS = {
-  open: 'active',
-  pending: 'on_hold',
-  closed: 'resolved',
-};
-
-/**
  * A conversation with one customer.
  *
  * status is one of: open, pending (waiting on the customer), closed.
@@ -29,7 +18,6 @@ const Ticket = defineModel({
     'customer_id',
     'assignee_id',
     'status',
-    'state',
     'created_at',
     'updated_at',
     'closed_at',
@@ -37,7 +25,6 @@ const Ticket = defineModel({
   beforeSave: function (ticket) {
     const now = clock.isoNow();
     if (!ticket.status) ticket.status = 'open';
-    ticket.state = STATE_FOR_STATUS[ticket.status] || ticket.state;
     if (!ticket.created_at) ticket.created_at = now;
     ticket.updated_at = now;
   },
