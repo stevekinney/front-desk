@@ -21,6 +21,7 @@ CREATE TABLE IF NOT EXISTS tickets (
   customer_id INTEGER NOT NULL REFERENCES customers (id),
   assignee_id INTEGER REFERENCES teammates (id),
   status      TEXT NOT NULL DEFAULT 'open',
+  state       TEXT NOT NULL DEFAULT 'active',
   created_at  TEXT NOT NULL,
   updated_at  TEXT NOT NULL,
   closed_at   TEXT
