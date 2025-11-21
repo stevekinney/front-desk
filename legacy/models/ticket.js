@@ -7,7 +7,7 @@ const clock = require('../lib/clock');
 const STATUSES = ['open', 'pending', 'closed'];
 
 /**
- * The names `state` used before `status` existed, for each status.
+ * Before 2022 a ticket's progress lived in `state`, with its own names.
  *
  * @type {Object<string, string>}
  */

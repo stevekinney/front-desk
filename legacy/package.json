@@ -1,15 +1,15 @@
 {
-  "name": "front-desk-mailroom",
-  "version": "1.0.0",
+  "name": "@front-desk/legacy",
+  "version": "2.4.1",
   "private": true,
   "description": "The mailroom: polls the inbox, turns mail into tickets, and keeps the SLA clock.",
   "main": "index.js",
+  "type": "commonjs",
   "bin": {
-    "mailroom": "bin/mailroom.js"
+    "mail-drop": "bin/mail-drop.js"
   },
   "license": "UNLICENSED",
   "dependencies": {
-    "mailparse-lite": "file:../vendor/mailparse-lite",
-    "sqlite3": "^4.0.6"
+    "mailparse-lite": "*"
   }
 }

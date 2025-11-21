@@ -1,0 +1,9 @@
+{
+  "from": {
+    "name": "Lars Eriksen",
+    "email": "lars@eriksenmarine.example"
+  },
+  "to": "help@frontdesk.example",
+  "subject": "Shipping to Norway?",
+  "text": "Do you ship to Norway? We'd like 1,000 brochures for a trade fair in Bergen and need to know the cost and how long it takes.\n\nLars"
+}

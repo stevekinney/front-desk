@@ -11,6 +11,7 @@ const config = require('./config');
 const db = require('./db/connection');
 const cache = require('./lib/cache');
 const clock = require('./lib/clock');
+const drop = require('./lib/drop');
 const sla = require('./lib/sla');
 const poller = require('./ingest/poller');
 const mailer = require('./outbox/mailer');
@@ -25,6 +26,7 @@ module.exports = {
   db: db,
   cache: cache,
   clock: clock,
+  drop: drop,
   sla: sla,
   poller: poller,
   mailer: mailer,

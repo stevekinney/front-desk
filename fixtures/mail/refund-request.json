@@ -1,0 +1,9 @@
+{
+  "from": {
+    "name": "Nora Quinn",
+    "email": "nora.quinn@example.com"
+  },
+  "to": "help@frontdesk.example",
+  "subject": "Refund for a cancelled order",
+  "text": "I cancelled order PP-20521 an hour after placing it, before the proof was approved. When will the refund reach my card?\n\nNora"
+}

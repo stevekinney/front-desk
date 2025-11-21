@@ -1,0 +1,9 @@
+{
+  "from": {
+    "name": "Ezra Holt",
+    "email": "ezra@holtcabinets.example"
+  },
+  "to": "help@frontdesk.example",
+  "subject": "Can't log in since this morning",
+  "text": "The login page says my password is wrong, but it's saved in my password manager and hasn't changed. Reset emails aren't arriving either.\n\nEzra"
+}

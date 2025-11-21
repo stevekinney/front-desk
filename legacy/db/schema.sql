@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS messages (
 
 CREATE INDEX IF NOT EXISTS messages_ticket ON messages (ticket_id);
 
--- Replies wait here until the outbox job hands them to the mail server.
+-- Replies wait here. In 2019 a cron job drained this into the mail server.
 CREATE TABLE IF NOT EXISTS outbox (
   id          INTEGER PRIMARY KEY AUTOINCREMENT,
   ticket_id   INTEGER NOT NULL REFERENCES tickets (id),
@@ -55,6 +55,18 @@ CREATE TABLE IF NOT EXISTS outbox (
   queued_at   TEXT NOT NULL,
   sent_at     TEXT
 );
+
+-- Business minutes from arrival to close, or to now for tickets still open.
+CREATE VIEW IF NOT EXISTS sla_report AS
+  SELECT t.id AS ticket_id,
+         t.status,
+         t.created_at,
+         t.closed_at,
+         business_minutes(
+           t.created_at,
+           coalesce(t.closed_at, strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))
+         ) AS business_minutes
+    FROM tickets t;
 
 -- Files the poller has already turned into tickets.
 CREATE TABLE IF NOT EXISTS mailroom_seen (

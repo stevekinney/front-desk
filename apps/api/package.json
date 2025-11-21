@@ -1,0 +1,21 @@
+{
+  "name": "@front-desk/api",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "tsx src/server.ts",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "dependencies": {
+    "@front-desk/contract": "*",
+    "@front-desk/legacy": "*",
+    "express": "^5.1.0",
+    "zod": "^4.1.12"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.5",
+    "@types/supertest": "^6.0.3",
+    "supertest": "^7.1.4"
+  }
+}

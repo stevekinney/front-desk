@@ -1,0 +1,581 @@
+openapi: 3.1.0
+info:
+  title: Front Desk API
+  version: 1.0.0
+  description: |
+    The HTTP contract between apps/api and the desk app.
+
+    This file is the source of truth. After editing it, run `npm run generate`
+    to rebuild src/generated/schema.d.ts.
+servers:
+  - url: /api
+
+paths:
+  /health:
+    get:
+      operationId: getHealth
+      responses:
+        '200':
+          description: The API is up.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [ok]
+                properties:
+                  ok:
+                    type: boolean
+
+  /tickets:
+    get:
+      operationId: listTickets
+      summary: List tickets, newest activity first.
+      parameters:
+        - name: status
+          in: query
+          schema:
+            $ref: '#/components/schemas/TicketStatus'
+        - name: tag
+          in: query
+          description: Only tickets with this tag name.
+          schema:
+            type: string
+        - name: assigneeId
+          in: query
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Tickets.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Ticket'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /tickets/{ticketId}:
+    parameters:
+      - $ref: '#/components/parameters/TicketId'
+    get:
+      operationId: getTicket
+      responses:
+        '200':
+          description: The ticket and its messages.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TicketDetail'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /tickets/{ticketId}/status:
+    parameters:
+      - $ref: '#/components/parameters/TicketId'
+    patch:
+      operationId: updateTicketStatus
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [status]
+              properties:
+                status:
+                  $ref: '#/components/schemas/TicketStatus'
+      responses:
+        '200':
+          description: The updated ticket.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ticket'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /tickets/{ticketId}/assignee:
+    parameters:
+      - $ref: '#/components/parameters/TicketId'
+    put:
+      operationId: assignTicket
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [teammateId]
+              properties:
+                teammateId:
+                  type: [integer, 'null']
+                  description: Null unassigns the ticket.
+      responses:
+        '200':
+          description: The updated ticket.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ticket'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /tickets/{ticketId}/replies:
+    parameters:
+      - $ref: '#/components/parameters/TicketId'
+    post:
+      operationId: replyToTicket
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReplyInput'
+      responses:
+        '201':
+          description: The reply, queued in the outbox.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /tickets/{ticketId}/tags/{tagId}:
+    parameters:
+      - $ref: '#/components/parameters/TicketId'
+      - name: tagId
+        in: path
+        required: true
+        schema:
+          type: integer
+    put:
+      operationId: addTagToTicket
+      responses:
+        '200':
+          description: The ticket's tags after the change.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Tag'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      operationId: removeTagFromTicket
+      responses:
+        '200':
+          description: The ticket's tags after the change.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Tag'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /tickets/{ticketId}/canned-replies/{cannedReplyId}:
+    parameters:
+      - $ref: '#/components/parameters/TicketId'
+      - name: cannedReplyId
+        in: path
+        required: true
+        schema:
+          type: integer
+    post:
+      operationId: sendCannedReply
+      summary: Fill in a canned reply for this ticket and send it.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [teammateId]
+              properties:
+                teammateId:
+                  type: integer
+      responses:
+        '201':
+          description: The reply, queued in the outbox.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /tags:
+    get:
+      operationId: listTags
+      responses:
+        '200':
+          description: Every tag.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Tag'
+    post:
+      operationId: createTag
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TagInput'
+      responses:
+        '201':
+          description: The new tag.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tag'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '409':
+          $ref: '#/components/responses/Conflict'
+
+  /canned-replies:
+    get:
+      operationId: listCannedReplies
+      responses:
+        '200':
+          description: Every canned reply.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CannedReply'
+    post:
+      operationId: createCannedReply
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CannedReplyInput'
+      responses:
+        '201':
+          description: The new canned reply.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CannedReply'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /teammates:
+    get:
+      operationId: listTeammates
+      responses:
+        '200':
+          description: Everyone on the support team.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Teammate'
+
+  /mail/fixtures:
+    get:
+      operationId: listMailFixtures
+      responses:
+        '200':
+          description: Names of the sample messages that can be simulated.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+
+  /mail/simulate:
+    post:
+      operationId: simulateIncomingMail
+      summary: Drop a sample message into the inbox and ingest it right away.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                fixture:
+                  type: string
+                  description: Fixture name. A random one is used when omitted.
+      responses:
+        '201':
+          description: The message was delivered.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimulatedMail'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+components:
+  parameters:
+    TicketId:
+      name: ticketId
+      in: path
+      required: true
+      schema:
+        type: integer
+
+  responses:
+    BadRequest:
+      description: The request was malformed.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: No such resource.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Conflict:
+      description: The resource already exists.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+  schemas:
+    Error:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: string
+        issues:
+          type: array
+          items:
+            type: object
+            required: [path, message]
+            properties:
+              path:
+                type: string
+              message:
+                type: string
+
+    TicketStatus:
+      type: string
+      enum: [open, pending, closed]
+
+    Teammate:
+      type: object
+      required: [id, name, email]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+
+    Customer:
+      type: object
+      required: [id, name, email, vip]
+      properties:
+        id:
+          type: integer
+        name:
+          type: [string, 'null']
+        email:
+          type: string
+        vip:
+          type: boolean
+
+    Tag:
+      type: object
+      required: [id, name, color]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        color:
+          type: string
+          description: A hex color such as "#2f855a".
+
+    TagInput:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+        color:
+          type: string
+
+    Sla:
+      type: object
+      required: [dueAt, state, remainingMinutes]
+      properties:
+        dueAt:
+          type: string
+          format: date-time
+        state:
+          type: string
+          enum: [on-track, at-risk, breached, met, missed]
+        remainingMinutes:
+          type: [integer, 'null']
+          description: Business minutes until due. Negative once breached. Null when closed.
+
+    Ticket:
+      type: object
+      required:
+        [
+          id,
+          subject,
+          status,
+          customer,
+          assignee,
+          tags,
+          sla,
+          messageCount,
+          createdAt,
+          updatedAt,
+          closedAt,
+        ]
+      properties:
+        id:
+          type: integer
+        subject:
+          type: string
+        status:
+          $ref: '#/components/schemas/TicketStatus'
+        customer:
+          $ref: '#/components/schemas/Customer'
+        assignee:
+          oneOf:
+            - $ref: '#/components/schemas/Teammate'
+            - type: 'null'
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tag'
+        sla:
+          $ref: '#/components/schemas/Sla'
+        messageCount:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        closedAt:
+          type: [string, 'null']
+          format: date-time
+
+    Message:
+      type: object
+      required: [id, direction, author, fromName, fromEmail, body, sentAt, createdAt, delivery]
+      properties:
+        id:
+          type: integer
+        direction:
+          type: string
+          enum: [inbound, outbound]
+        author:
+          oneOf:
+            - $ref: '#/components/schemas/Teammate'
+            - type: 'null'
+        fromName:
+          type: [string, 'null']
+        fromEmail:
+          type: string
+        body:
+          type: string
+        sentAt:
+          type: [string, 'null']
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+        delivery:
+          description: For outbound messages, the outbox entry. Null for inbound mail.
+          oneOf:
+            - $ref: '#/components/schemas/Delivery'
+            - type: 'null'
+
+    Delivery:
+      type: object
+      required: [to, subject, queuedAt]
+      properties:
+        to:
+          type: string
+        subject:
+          type: string
+        queuedAt:
+          type: string
+          format: date-time
+
+    TicketDetail:
+      allOf:
+        - $ref: '#/components/schemas/Ticket'
+        - type: object
+          required: [messages]
+          properties:
+            messages:
+              type: array
+              items:
+                $ref: '#/components/schemas/Message'
+
+    ReplyInput:
+      type: object
+      required: [teammateId, body]
+      properties:
+        teammateId:
+          type: integer
+        body:
+          type: string
+
+    CannedReply:
+      type: object
+      required: [id, title, body]
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        body:
+          type: string
+          description: May contain {{customer.name}}, {{ticket.id}}, and {{teammate.name}}.
+
+    CannedReplyInput:
+      type: object
+      required: [title, body]
+      properties:
+        title:
+          type: string
+        body:
+          type: string
+
+    SimulatedMail:
+      type: object
+      required: [filename, ticketId, created]
+      properties:
+        filename:
+          type: string
+        ticketId:
+          type: integer
+        created:
+          type: boolean

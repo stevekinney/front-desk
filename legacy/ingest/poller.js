@@ -153,6 +153,7 @@ function start(cb) {
       });
     });
   }, config.pollIntervalMs);
+  timer.unref();
   cb(null, true);
 }
 

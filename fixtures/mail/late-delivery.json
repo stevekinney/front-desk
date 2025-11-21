@@ -1,0 +1,9 @@
+{
+  "from": {
+    "name": "Wen Li",
+    "email": "wen.li@example.com"
+  },
+  "to": "help@frontdesk.example",
+  "subject": "Order is a week late",
+  "text": "Order PP-20530 was supposed to arrive last Friday. Tracking still says \"In transit\". I need these programs for a recital on Saturday.\n\nWen"
+}

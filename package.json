@@ -1,0 +1,38 @@
+{
+  "name": "front-desk",
+  "private": true,
+  "version": "0.0.0",
+  "description": "A tiny help desk: customer emails become tickets that teammates reply to, tag, assign, and close.",
+  "type": "module",
+  "engines": {
+    "node": ">=24.11.1"
+  },
+  "workspaces": [
+    "packages/*",
+    "vendor/*",
+    "legacy",
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "tsx watch apps/api/src/server.ts",
+    "generate": "npm run generate -w @front-desk/contract",
+    "mail:drop": "node legacy/bin/mail-drop.js",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit -p tsconfig.json && npm run typecheck --workspaces --if-present",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.1",
+    "@types/node": "^24.0.0",
+    "eslint": "^9.39.1",
+    "globals": "^16.5.0",
+    "prettier": "^3.6.2",
+    "tsx": "^4.20.6",
+    "typescript": "~5.9.3",
+    "typescript-eslint": "^8.47.0",
+    "vitest": "^4.0.10"
+  }
+}

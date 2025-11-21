@@ -1,7 +1,10 @@
 # Mailroom
 
-The mailroom reads mail from the spool directory, turns it into tickets, and
-keeps the SLA clock.
+The mailroom has been running since 2019. It reads mail from the spool
+directory, turns it into tickets, and keeps the SLA clock.
+
+It predates the TypeScript API, and it's still the code that creates every
+ticket.
 
 ## Layout
 
@@ -15,7 +18,7 @@ models/          one file per table
 ingest/          parse inbox files, thread them onto tickets, poll the inbox
 rules/           automation rules, run on incoming mail and hourly from cron
 outbox/          replies
-bin/mailroom.js  run the poller
+bin/mail-drop.js copy a sample message into the inbox
 ```
 
 ## Conventions
@@ -30,6 +33,7 @@ bin/mailroom.js  run the poller
 | ------------------- | ---------------------------------- |
 | `FRONT_DESK_DB`     | `data/front-desk.db`               |
 | `MAILROOM_INBOX`    | `inbox`                            |
+| `MAILROOM_FIXTURES` | `fixtures/mail`                    |
 | `MAILROOM_POLL_MS`  | `2000`                             |
 | `MAILROOM_LOCK`     | `$TMPDIR/front-desk-mailroom.lock` |
 | `SUPPORT_ADDRESS`   | `help@frontdesk.example`           |

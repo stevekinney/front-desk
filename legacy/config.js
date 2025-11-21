@@ -21,11 +21,14 @@ const env = process.env;
  */
 
 module.exports = {
-  /** SQLite database shared with the desk app. */
+  /** SQLite database shared with the web API. */
   dbPath: path.resolve(env.FRONT_DESK_DB || 'data/front-desk.db'),
 
   /** The spool directory the poller reads. Relative to the working directory. */
   inboxDir: path.resolve(env.MAILROOM_INBOX || 'inbox'),
+
+  /** Sample messages that `mail-drop` can copy into the inbox. */
+  fixturesDir: path.resolve(env.MAILROOM_FIXTURES || 'fixtures/mail'),
 
   /** How often the poller checks the inbox. */
   pollIntervalMs: parseInt(env.MAILROOM_POLL_MS || '2000', 10),

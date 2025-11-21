@@ -1,6 +1,11 @@
 node_modules/
-data/
+dist/
+coverage/
+data/*
+!data/.gitkeep
 inbox/
 *.log
 .DS_Store
+.env
+.env.local
 exports/

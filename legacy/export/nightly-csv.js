@@ -17,7 +17,6 @@ const path = require('path');
 
 const config = require('../config');
 const db = require('../db/connection');
-const sla = require('../lib/sla');
 
 const COLUMNS = [
   'ticket_id',
@@ -59,9 +58,11 @@ function csvField(value) {
  */
 function exportDay(day, cb) {
   db.all(
-    'SELECT t.id, c.email, c.name, t.subject, t.state, t.created_at, t.closed_at' +
+    'SELECT t.id, c.email, c.name, t.subject, t.state, t.created_at, t.closed_at,' +
+      ' r.business_minutes' +
       ' FROM tickets t' +
       ' JOIN customers c ON c.id = t.customer_id' +
+      ' JOIN sla_report r ON r.ticket_id = t.id' +
       " WHERE t.state = 'resolved' AND t.closed_at IS NOT NULL" +
       ' ORDER BY t.closed_at, t.id',
     [],
@@ -81,7 +82,7 @@ function exportDay(day, cb) {
             row.state,
             row.created_at,
             row.closed_at,
-            sla.businessMinutesBetween(new Date(row.created_at), new Date(row.closed_at)),
+            row.business_minutes,
           ]
             .map(csvField)
             .join(','),
