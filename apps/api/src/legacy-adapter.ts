@@ -8,8 +8,6 @@
 import { createRequire } from 'node:module';
 import { promisify } from 'node:util';
 
-import type { TicketStatus } from '@front-desk/contract';
-
 type Callback<T> = (err: Error | null, result?: T) => void;
 
 export interface LegacySlaSummary {
@@ -23,17 +21,6 @@ export interface LegacyDelivery {
   filename: string;
   ticketId: number;
   created: boolean;
-}
-
-export interface LegacyTicket {
-  id: number;
-  subject: string;
-  customer_id: number;
-  assignee_id: number | null;
-  status: TicketStatus;
-  created_at: string;
-  updated_at: string;
-  closed_at: string | null;
 }
 
 interface LegacyMailroom {
@@ -55,11 +42,6 @@ interface LegacyMailroom {
   drop: {
     dropFixture(name: string, cb: Callback<string>): void;
     listFixtures(cb: Callback<string[]>): void;
-  };
-  models: {
-    Ticket: {
-      updateStatus(id: number, status: TicketStatus, cb: Callback<LegacyTicket | null>): void;
-    };
   };
 }
 
@@ -88,14 +70,6 @@ export function closeLegacy(): void {
 export const getSla = promisify(mailroom.sla.forTicket) as (
   ticketId: number,
 ) => Promise<LegacySlaSummary | null>;
-
-/**
- * Status changes go through the mailroom's Ticket model so its save hooks run.
- */
-export const updateTicketStatus = promisify(mailroom.models.Ticket.updateStatus) as (
-  id: number,
-  status: TicketStatus,
-) => Promise<LegacyTicket | null>;
 
 /**
  * Record a reply on the ticket and queue it in the outbox. Resolves with the
