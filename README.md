@@ -1,11 +1,12 @@
 # Front Desk
 
 A tiny help desk. Customer emails become tickets; teammates reply, tag,
-assign, and close them, and every ticket has an SLA clock in business hours.
+assign, and close them, and a badge counts down each ticket's SLA in business
+hours.
 
 ## Requirements
 
-- Node 24.11 or later (`nvm use` reads `.nvmrc`)
+- Node 24.15 or later (`nvm use` reads `.nvmrc`)
 - That's it: no Docker, no database server, no API keys.
 
 ## Getting going
@@ -15,7 +16,7 @@ npm install
 npm run dev
 ```
 
-The API listens on http://localhost:4100.
+Open http://localhost:5173.
 
 To have a new email arrive:
 
@@ -29,8 +30,8 @@ Run `npm run mail:drop` with no arguments to list the fixtures.
 
 | Script                        | What it does                                         |
 | ----------------------------- | ---------------------------------------------------- |
-| `npm run dev`                 | API on :4100 with the mailroom polling               |
-| `npm test`                    | Vitest: the `api` project                            |
+| `npm run dev`                 | API on :4100 with the mailroom polling, web on :5173 |
+| `npm test`                    | Vitest: the `api` and `web` projects                 |
 | `npm run typecheck`           | TypeScript, every workspace                          |
 | `npm run lint`                | ESLint                                               |
 | `npm run generate`            | Rebuild the API types from `openapi.yaml`            |
@@ -40,6 +41,7 @@ Run `npm run mail:drop` with no arguments to list the fixtures.
 
 ```
 apps/api            Express 5 API (TypeScript)
+apps/web            React 19 app
 packages/contract   openapi.yaml and the types generated from it
 legacy              the 2019 mailroom (CommonJS)
 vendor              third-party code we keep a copy of

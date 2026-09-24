@@ -1,7 +1,7 @@
 # @front-desk/contract
 
-`openapi.yaml` describes every endpoint the desk app calls. `apps/api` imports
-its request and response types from here.
+`openapi.yaml` describes every endpoint the web app calls. Both `apps/api` and
+`apps/web` import their request and response types from here.
 
 `src/generated/schema.d.ts` is produced from `openapi.yaml`:
 

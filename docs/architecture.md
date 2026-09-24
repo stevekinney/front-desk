@@ -1,10 +1,10 @@
 # Architecture
 
 Front Desk turns customer email into tickets. Teammates reply, tag, assign,
-and close them through the API.
+and close them in the web app.
 
 ```
-inbox/ ──▶ legacy/ (mailroom) ──▶ data/front-desk.db ◀── apps/api
+inbox/ ──▶ legacy/ (mailroom) ──▶ data/front-desk.db ◀── apps/api ◀── apps/web
                                         ▲                    │
                                         └── legacy-adapter.ts┘
 ```
@@ -21,9 +21,12 @@ environment once, when `legacy/config.js` is first required.
 bodies are validated with zod, and response shapes come from
 `packages/contract`. It runs the mailroom's poller in-process.
 
+**`apps/web`, the React app (2026).** React 19 and React Router, served by
+Vite on port 5173. Vite proxies `/api` to the API.
+
 **`packages/contract`.** `openapi.yaml` is the source of truth for the HTTP
-API. `npm run generate` turns it into `src/generated/schema.d.ts`, which the
-API imports.
+API. `npm run generate` turns it into `src/generated/schema.d.ts`, which both
+the API and the web app import.
 
 **`vendor/mailparse-lite`.** A vendored copy of a small RFC 822 parser. The
 mailroom uses it for raw `.eml` files.
@@ -48,8 +51,8 @@ poller never moves or deletes files; it records what it has ingested in the
 `mailroom_seen` table.
 
 - `npm run mail:drop -- <fixture>` copies a file from `fixtures/mail/` into
-  `inbox/` as `drop-<timestamp>-<name>`. `POST /api/mail/simulate` does the
-  same thing.
+  `inbox/` as `drop-<timestamp>-<name>`. The "Simulate incoming email" button
+  does the same thing.
 - Replies are written to the `outbox` table. Nothing leaves the machine.
 
 ## SLA
@@ -58,9 +61,8 @@ Every ticket must be closed within **8 business hours** of arriving. Business
 hours are 09:00 to 17:00, Monday to Friday, in the support desk's time zone
 (America/New_York). There are no holidays.
 
-Every ticket the API returns carries its SLA: the business time remaining, or
-how far past due it is. Once a ticket is closed it says whether the SLA was
-met.
+The badge shows the business time remaining, or how far past due a ticket is.
+Once a ticket is closed it shows whether the SLA was met.
 
 ## Data
 

@@ -22,8 +22,7 @@ export function listCannedReplies(db: Database): CannedReply[] {
 
 export function findCannedReply(db: Database, id: number): CannedReply | null {
   const row = db.prepare('SELECT id, title, body FROM canned_replies WHERE id = ?').get(id) as
-    | CannedReplyRow
-    | undefined;
+    CannedReplyRow | undefined;
   return row ? toCannedReply(row) : null;
 }
 
@@ -54,8 +53,7 @@ export function findTemplateContext(
     )
     .get(ticketId) as { id: number; customer_name: string | null } | undefined;
   const teammate = db.prepare('SELECT name FROM teammates WHERE id = ?').get(teammateId) as
-    | { name: string }
-    | undefined;
+    { name: string } | undefined;
   if (!ticket || !teammate) return null;
   return { customerName: ticket.customer_name, ticketId: ticket.id, teammateName: teammate.name };
 }

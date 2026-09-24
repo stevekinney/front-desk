@@ -14,7 +14,7 @@ const simulateSchema = z.object({
 });
 
 /**
- * "Simulate incoming email" in the desk app. It does what
+ * "Simulate incoming email" in the web app. It does what
  * `npm run mail:drop` does, then polls right away instead of waiting.
  */
 export function mailRouter(db: Database): Router {

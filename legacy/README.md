@@ -3,8 +3,8 @@
 The mailroom has been running since 2019. It reads mail from the spool
 directory, turns it into tickets, and keeps the SLA clock.
 
-It predates the TypeScript API, and it's still the code that creates every
-ticket.
+It predates the TypeScript API and the React app, and it's still the code that
+creates every ticket.
 
 ## Layout
 

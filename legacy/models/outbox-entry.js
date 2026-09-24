@@ -3,7 +3,7 @@
 const defineModel = require('../lib/model');
 
 /**
- * A reply waiting to go out. Nothing drains this table any more; the desk app
+ * A reply waiting to go out. Nothing drains this table any more; the web app
  * reads it to show that a reply was sent.
  */
 const OutboxEntry = defineModel({

@@ -2,7 +2,7 @@
   "name": "@front-desk/contract",
   "version": "0.0.0",
   "private": true,
-  "description": "The HTTP contract between the API and the desk app. openapi.yaml is the source; src/generated is output.",
+  "description": "The HTTP contract between the API and the web app. openapi.yaml is the source; src/generated is output.",
   "type": "module",
   "exports": {
     ".": "./src/index.ts"
@@ -12,6 +12,6 @@
     "typecheck": "tsc --noEmit -p tsconfig.json"
   },
   "devDependencies": {
-    "openapi-typescript": "^7.10.1"
+    "openapi-typescript": "^7.13.0"
   }
 }

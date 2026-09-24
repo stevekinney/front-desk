@@ -113,7 +113,7 @@ function createContext(ticket, cb) {
       },
 
       /**
-       * Tags are managed in the desk app; a rule can only use one that exists.
+       * Tags are managed in the web app; a rule can only use one that exists.
        *
        * @param {string} name
        * @param {(err: Error | null) => void} done

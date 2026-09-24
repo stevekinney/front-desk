@@ -22,15 +22,13 @@ export function listTags(db: Database): Tag[] {
 
 export function findTag(db: Database, id: number): Tag | null {
   const row = db.prepare('SELECT id, name, color FROM tags WHERE id = ?').get(id) as
-    | TagRow
-    | undefined;
+    TagRow | undefined;
   return row ? toTag(row) : null;
 }
 
 export function findTagByName(db: Database, name: string): Tag | null {
   const row = db.prepare('SELECT id, name, color FROM tags WHERE name = ?').get(name) as
-    | TagRow
-    | undefined;
+    TagRow | undefined;
   return row ? toTag(row) : null;
 }
 

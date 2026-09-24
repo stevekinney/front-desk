@@ -3,7 +3,7 @@ info:
   title: Front Desk API
   version: 1.0.0
   description: |
-    The HTTP contract between apps/api and the desk app.
+    The HTTP contract between apps/api and apps/web.
 
     This file is the source of truth. After editing it, run `npm run generate`
     to rebuild src/generated/schema.d.ts.
