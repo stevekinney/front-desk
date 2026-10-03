@@ -23,6 +23,15 @@ export default defineConfig({
           setupFiles: ['./test/setup.ts'],
         },
       },
+      {
+        test: {
+          name: 'legacy',
+          root: './legacy',
+          environment: 'node',
+          include: ['test/**/*.test.js'],
+          setupFiles: ['./test/setup.js'],
+        },
+      },
     ],
   },
 });

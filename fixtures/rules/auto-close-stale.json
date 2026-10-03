@@ -1,0 +1,204 @@
+{
+  "rule": "auto-close-stale",
+  "now": "2026-10-07T15:00:00.000Z",
+  "teammates": [
+    {
+      "id": 1,
+      "name": "Priya Raman",
+      "email": "priya@frontdesk.example"
+    },
+    {
+      "id": 2,
+      "name": "Dana Whitfield",
+      "email": "dana@frontdesk.example"
+    },
+    {
+      "id": 3,
+      "name": "Marcus Lee",
+      "email": "marcus@frontdesk.example"
+    },
+    {
+      "id": 4,
+      "name": "Jo Alvarez",
+      "email": "jo@frontdesk.example"
+    }
+  ],
+  "cases": [
+    {
+      "name": "leaves open tickets alone",
+      "ticket": {
+        "id": 101,
+        "subject": "Question about my order",
+        "status": "open",
+        "assignee_id": null,
+        "created_at": "2026-10-06T14:00:00.000Z",
+        "updated_at": "2026-09-01T14:00:00.000Z",
+        "closed_at": null,
+        "customer": {
+          "name": "Ana Souza",
+          "email": "ana@example.com",
+          "vip": false
+        },
+        "tags": [],
+        "message": null
+      },
+      "expected": {
+        "when": false,
+        "effects": []
+      }
+    },
+    {
+      "name": "leaves a ticket that has been on hold for six days",
+      "ticket": {
+        "id": 102,
+        "subject": "Question about my order",
+        "status": "pending",
+        "assignee_id": null,
+        "created_at": "2026-10-06T14:00:00.000Z",
+        "updated_at": "2026-10-01T15:00:00.000Z",
+        "closed_at": null,
+        "customer": {
+          "name": "Ana Souza",
+          "email": "ana@example.com",
+          "vip": false
+        },
+        "tags": [],
+        "message": null
+      },
+      "expected": {
+        "when": true,
+        "effects": []
+      }
+    },
+    {
+      "name": "closes a ticket that has been on hold for eight days",
+      "ticket": {
+        "id": 103,
+        "subject": "Question about my order",
+        "status": "pending",
+        "assignee_id": null,
+        "created_at": "2026-10-06T14:00:00.000Z",
+        "updated_at": "2026-09-29T15:00:00.000Z",
+        "closed_at": null,
+        "customer": {
+          "name": "Ana Souza",
+          "email": "ana@example.com",
+          "vip": false
+        },
+        "tags": [],
+        "message": null
+      },
+      "expected": {
+        "when": true,
+        "effects": [
+          {
+            "type": "setStatus",
+            "status": "closed"
+          }
+        ]
+      }
+    },
+    {
+      "name": "closes at exactly seven days",
+      "ticket": {
+        "id": 104,
+        "subject": "Question about my order",
+        "status": "pending",
+        "assignee_id": null,
+        "created_at": "2026-10-06T14:00:00.000Z",
+        "updated_at": "2026-09-30T15:00:00.000Z",
+        "closed_at": null,
+        "customer": {
+          "name": "Ana Souza",
+          "email": "ana@example.com",
+          "vip": false
+        },
+        "tags": [],
+        "message": null
+      },
+      "expected": {
+        "when": true,
+        "effects": [
+          {
+            "type": "setStatus",
+            "status": "closed"
+          }
+        ]
+      }
+    },
+    {
+      "name": "gives VIP customers fourteen days",
+      "ticket": {
+        "id": 105,
+        "subject": "Question about my order",
+        "status": "pending",
+        "assignee_id": null,
+        "created_at": "2026-10-06T14:00:00.000Z",
+        "updated_at": "2026-09-29T15:00:00.000Z",
+        "closed_at": null,
+        "customer": {
+          "name": "Hannah Okoro",
+          "email": "hannah@okoroevents.example",
+          "vip": true
+        },
+        "tags": [],
+        "message": null
+      },
+      "expected": {
+        "when": true,
+        "effects": []
+      }
+    },
+    {
+      "name": "closes a VIP ticket after fifteen days",
+      "ticket": {
+        "id": 106,
+        "subject": "Question about my order",
+        "status": "pending",
+        "assignee_id": null,
+        "created_at": "2026-10-06T14:00:00.000Z",
+        "updated_at": "2026-09-22T15:00:00.000Z",
+        "closed_at": null,
+        "customer": {
+          "name": "Hannah Okoro",
+          "email": "hannah@okoroevents.example",
+          "vip": true
+        },
+        "tags": [],
+        "message": null
+      },
+      "expected": {
+        "when": true,
+        "effects": [
+          {
+            "type": "setStatus",
+            "status": "closed"
+          }
+        ]
+      }
+    },
+    {
+      "name": "leaves closed tickets alone",
+      "ticket": {
+        "id": 107,
+        "subject": "Question about my order",
+        "status": "closed",
+        "assignee_id": null,
+        "created_at": "2026-10-06T14:00:00.000Z",
+        "updated_at": "2026-09-01T14:00:00.000Z",
+        "closed_at": "2026-09-01T14:00:00.000Z",
+        "customer": {
+          "name": "Ana Souza",
+          "email": "ana@example.com",
+          "vip": false
+        },
+        "tags": [],
+        "message": null
+      },
+      "expected": {
+        "when": false,
+        "effects": []
+      }
+    }
+  ]
+}

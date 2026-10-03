@@ -31,7 +31,7 @@ Run `npm run mail:drop` with no arguments to list the fixtures.
 | Script                        | What it does                                         |
 | ----------------------------- | ---------------------------------------------------- |
 | `npm run dev`                 | API on :4100 with the mailroom polling, web on :5173 |
-| `npm test`                    | Vitest: the `api` and `web` projects                 |
+| `npm test`                    | Vitest: the `api`, `web`, and `legacy` projects      |
 | `npm run typecheck`           | TypeScript, every workspace                          |
 | `npm run lint`                | ESLint                                               |
 | `npm run generate`            | Rebuild the API types from `openapi.yaml`            |

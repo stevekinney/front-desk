@@ -36,4 +36,8 @@ export default tseslint.config(
       'no-unused-vars': ['error', { args: 'none', caughtErrors: 'none' }],
     },
   },
+  {
+    files: ['legacy/test/**/*.js'],
+    languageOptions: { sourceType: 'module', globals: globals.node },
+  },
 );

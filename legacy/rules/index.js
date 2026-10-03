@@ -12,7 +12,8 @@
  *   }
  *
  * They run in the order below, on every message the mailroom ingests and
- * once an hour from cron (bin/sweep-rules.js).
+ * once an hour from cron (bin/sweep-rules.js). Each rule's golden cases live
+ * in fixtures/rules/<name>.json; `npm run rules:parity -- <name>` checks them.
  */
 
 const context = require('./context');

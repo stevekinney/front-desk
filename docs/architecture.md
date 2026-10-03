@@ -55,6 +55,18 @@ poller never moves or deletes files; it records what it has ingested in the
   does the same thing.
 - Replies are written to the `outbox` table. Nothing leaves the machine.
 
+## Automation rules
+
+The mailroom runs a small set of rules from `legacy/rules/` on every message it
+ingests: reopening closed tickets when the customer writes back, tagging
+billing questions, escalating VIP customers, assigning unassigned tickets in
+turn, and closing tickets that have waited on the customer too long. The same
+rules also run hourly from `legacy/bin/sweep-rules.js`.
+Set `MAILROOM_RULES=off` to ingest mail without them; the test setups do.
+
+Each rule has golden cases in `fixtures/rules/`. `npm run rules:parity` checks
+the rules against them.
+
 ## SLA
 
 Every ticket must be closed within **8 business hours** of arriving. Business

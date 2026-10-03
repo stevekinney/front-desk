@@ -1,0 +1,302 @@
+{
+  "rule": "tag-billing",
+  "now": "2026-10-07T15:00:00.000Z",
+  "teammates": [
+    {
+      "id": 1,
+      "name": "Priya Raman",
+      "email": "priya@frontdesk.example"
+    },
+    {
+      "id": 2,
+      "name": "Dana Whitfield",
+      "email": "dana@frontdesk.example"
+    },
+    {
+      "id": 3,
+      "name": "Marcus Lee",
+      "email": "marcus@frontdesk.example"
+    },
+    {
+      "id": 4,
+      "name": "Jo Alvarez",
+      "email": "jo@frontdesk.example"
+    }
+  ],
+  "cases": [
+    {
+      "name": "tags a refund request",
+      "ticket": {
+        "id": 115,
+        "subject": "Refund for a cancelled order",
+        "status": "open",
+        "assignee_id": null,
+        "created_at": "2026-10-06T14:00:00.000Z",
+        "updated_at": "2026-10-06T14:00:00.000Z",
+        "closed_at": null,
+        "customer": {
+          "name": "Ana Souza",
+          "email": "ana@example.com",
+          "vip": false
+        },
+        "tags": [],
+        "message": {
+          "direction": "inbound",
+          "body": "I cancelled PP-20311 an hour after ordering. When will I get my money back?",
+          "created_at": "2026-10-07T14:55:00.000Z"
+        }
+      },
+      "expected": {
+        "when": true,
+        "effects": [
+          {
+            "type": "addTag",
+            "tag": "billing"
+          }
+        ]
+      }
+    },
+    {
+      "name": "finds billing words in the body",
+      "ticket": {
+        "id": 116,
+        "subject": "Quick question",
+        "status": "open",
+        "assignee_id": null,
+        "created_at": "2026-10-06T14:00:00.000Z",
+        "updated_at": "2026-10-06T14:00:00.000Z",
+        "closed_at": null,
+        "customer": {
+          "name": "Ana Souza",
+          "email": "ana@example.com",
+          "vip": false
+        },
+        "tags": [],
+        "message": {
+          "direction": "inbound",
+          "body": "Can you send me an invoice with our VAT number on it?",
+          "created_at": "2026-10-07T14:55:00.000Z"
+        }
+      },
+      "expected": {
+        "when": true,
+        "effects": [
+          {
+            "type": "addTag",
+            "tag": "billing"
+          }
+        ]
+      }
+    },
+    {
+      "name": "marks a double charge as urgent",
+      "ticket": {
+        "id": 117,
+        "subject": "Charged twice",
+        "status": "open",
+        "assignee_id": null,
+        "created_at": "2026-10-06T14:00:00.000Z",
+        "updated_at": "2026-10-06T14:00:00.000Z",
+        "closed_at": null,
+        "customer": {
+          "name": "Ana Souza",
+          "email": "ana@example.com",
+          "vip": false
+        },
+        "tags": [],
+        "message": {
+          "direction": "inbound",
+          "body": "My card was charged twice for the same order.",
+          "created_at": "2026-10-07T14:55:00.000Z"
+        }
+      },
+      "expected": {
+        "when": true,
+        "effects": [
+          {
+            "type": "addTag",
+            "tag": "billing"
+          },
+          {
+            "type": "addTag",
+            "tag": "urgent"
+          }
+        ]
+      }
+    },
+    {
+      "name": "treats a chargeback as billing and urgent",
+      "ticket": {
+        "id": 118,
+        "subject": "Order PP-20412",
+        "status": "open",
+        "assignee_id": null,
+        "created_at": "2026-10-06T14:00:00.000Z",
+        "updated_at": "2026-10-06T14:00:00.000Z",
+        "closed_at": null,
+        "customer": {
+          "name": "Ana Souza",
+          "email": "ana@example.com",
+          "vip": false
+        },
+        "tags": [],
+        "message": {
+          "direction": "inbound",
+          "body": "If this is not sorted out today I will file a chargeback.",
+          "created_at": "2026-10-07T14:55:00.000Z"
+        }
+      },
+      "expected": {
+        "when": true,
+        "effects": [
+          {
+            "type": "addTag",
+            "tag": "billing"
+          },
+          {
+            "type": "addTag",
+            "tag": "urgent"
+          }
+        ]
+      }
+    },
+    {
+      "name": "does not add tags the ticket already has",
+      "ticket": {
+        "id": 119,
+        "subject": "Disputed payment",
+        "status": "open",
+        "assignee_id": null,
+        "created_at": "2026-10-06T14:00:00.000Z",
+        "updated_at": "2026-10-06T14:00:00.000Z",
+        "closed_at": null,
+        "customer": {
+          "name": "Ana Souza",
+          "email": "ana@example.com",
+          "vip": false
+        },
+        "tags": [
+          "billing"
+        ],
+        "message": {
+          "direction": "inbound",
+          "body": "Our bank says the payment is disputed.",
+          "created_at": "2026-10-07T14:55:00.000Z"
+        }
+      },
+      "expected": {
+        "when": true,
+        "effects": [
+          {
+            "type": "addTag",
+            "tag": "urgent"
+          }
+        ]
+      }
+    },
+    {
+      "name": "leaves other mail alone",
+      "ticket": {
+        "id": 120,
+        "subject": "Poster colors look off",
+        "status": "open",
+        "assignee_id": null,
+        "created_at": "2026-10-06T14:00:00.000Z",
+        "updated_at": "2026-10-06T14:00:00.000Z",
+        "closed_at": null,
+        "customer": {
+          "name": "Ana Souza",
+          "email": "ana@example.com",
+          "vip": false
+        },
+        "tags": [],
+        "message": {
+          "direction": "inbound",
+          "body": "The blues printed purple.",
+          "created_at": "2026-10-07T14:55:00.000Z"
+        }
+      },
+      "expected": {
+        "when": true,
+        "effects": []
+      }
+    },
+    {
+      "name": "does not match words that only contain a keyword",
+      "ticket": {
+        "id": 121,
+        "subject": "Recharge station banner",
+        "status": "open",
+        "assignee_id": null,
+        "created_at": "2026-10-06T14:00:00.000Z",
+        "updated_at": "2026-10-06T14:00:00.000Z",
+        "closed_at": null,
+        "customer": {
+          "name": "Ana Souza",
+          "email": "ana@example.com",
+          "vip": false
+        },
+        "tags": [],
+        "message": {
+          "direction": "inbound",
+          "body": "Can you print a banner that says \"recharge here\"?",
+          "created_at": "2026-10-07T14:55:00.000Z"
+        }
+      },
+      "expected": {
+        "when": true,
+        "effects": []
+      }
+    },
+    {
+      "name": "only looks at inbound mail",
+      "ticket": {
+        "id": 122,
+        "subject": "Refund issued",
+        "status": "open",
+        "assignee_id": null,
+        "created_at": "2026-10-06T14:00:00.000Z",
+        "updated_at": "2026-10-06T14:00:00.000Z",
+        "closed_at": null,
+        "customer": {
+          "name": "Ana Souza",
+          "email": "ana@example.com",
+          "vip": false
+        },
+        "tags": [],
+        "message": {
+          "direction": "outbound",
+          "body": "I issued a refund.",
+          "created_at": "2026-10-07T14:55:00.000Z"
+        }
+      },
+      "expected": {
+        "when": false,
+        "effects": []
+      }
+    },
+    {
+      "name": "does nothing on the hourly sweep",
+      "ticket": {
+        "id": 123,
+        "subject": "Refund please",
+        "status": "open",
+        "assignee_id": null,
+        "created_at": "2026-10-06T14:00:00.000Z",
+        "updated_at": "2026-10-06T14:00:00.000Z",
+        "closed_at": null,
+        "customer": {
+          "name": "Ana Souza",
+          "email": "ana@example.com",
+          "vip": false
+        },
+        "tags": [],
+        "message": null
+      },
+      "expected": {
+        "when": false,
+        "effects": []
+      }
+    }
+  ]
+}

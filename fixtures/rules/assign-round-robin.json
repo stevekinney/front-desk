@@ -1,0 +1,328 @@
+{
+  "rule": "assign-round-robin",
+  "note": "Cases run in order against one copy of the rule, so the rotation carries from case to case.",
+  "now": "2026-10-07T15:00:00.000Z",
+  "teammates": [
+    {
+      "id": 1,
+      "name": "Priya Raman",
+      "email": "priya@frontdesk.example"
+    },
+    {
+      "id": 2,
+      "name": "Dana Whitfield",
+      "email": "dana@frontdesk.example"
+    },
+    {
+      "id": 3,
+      "name": "Marcus Lee",
+      "email": "marcus@frontdesk.example"
+    },
+    {
+      "id": 4,
+      "name": "Jo Alvarez",
+      "email": "jo@frontdesk.example"
+    }
+  ],
+  "cases": [
+    {
+      "name": "gives the first new ticket to the first teammate",
+      "ticket": {
+        "id": 124,
+        "subject": "Question about my order",
+        "status": "open",
+        "assignee_id": null,
+        "created_at": "2026-10-06T14:00:00.000Z",
+        "updated_at": "2026-10-06T14:00:00.000Z",
+        "closed_at": null,
+        "customer": {
+          "name": "Ana Souza",
+          "email": "ana@example.com",
+          "vip": false
+        },
+        "tags": [],
+        "message": {
+          "direction": "inbound",
+          "body": "Hello, any update?",
+          "created_at": "2026-10-07T14:55:00.000Z"
+        }
+      },
+      "expected": {
+        "when": true,
+        "effects": [
+          {
+            "type": "assign",
+            "teammateId": 1
+          }
+        ]
+      }
+    },
+    {
+      "name": "gives the next ticket to the next teammate",
+      "ticket": {
+        "id": 125,
+        "subject": "Question about my order",
+        "status": "open",
+        "assignee_id": null,
+        "created_at": "2026-10-06T14:00:00.000Z",
+        "updated_at": "2026-10-06T14:00:00.000Z",
+        "closed_at": null,
+        "customer": {
+          "name": "Ana Souza",
+          "email": "ana@example.com",
+          "vip": false
+        },
+        "tags": [],
+        "message": {
+          "direction": "inbound",
+          "body": "Hello, any update?",
+          "created_at": "2026-10-07T14:55:00.000Z"
+        }
+      },
+      "expected": {
+        "when": true,
+        "effects": [
+          {
+            "type": "assign",
+            "teammateId": 2
+          }
+        ]
+      }
+    },
+    {
+      "name": "skips spam without using up a turn",
+      "ticket": {
+        "id": 126,
+        "subject": "You have won!",
+        "status": "open",
+        "assignee_id": null,
+        "created_at": "2026-10-06T14:00:00.000Z",
+        "updated_at": "2026-10-06T14:00:00.000Z",
+        "closed_at": null,
+        "customer": {
+          "name": "Ana Souza",
+          "email": "ana@example.com",
+          "vip": false
+        },
+        "tags": [
+          "spam"
+        ],
+        "message": {
+          "direction": "inbound",
+          "body": "Hello, any update?",
+          "created_at": "2026-10-07T14:55:00.000Z"
+        }
+      },
+      "expected": {
+        "when": true,
+        "effects": []
+      }
+    },
+    {
+      "name": "ignores tickets that already have an assignee",
+      "ticket": {
+        "id": 127,
+        "subject": "Question about my order",
+        "status": "open",
+        "assignee_id": 4,
+        "created_at": "2026-10-06T14:00:00.000Z",
+        "updated_at": "2026-10-06T14:00:00.000Z",
+        "closed_at": null,
+        "customer": {
+          "name": "Ana Souza",
+          "email": "ana@example.com",
+          "vip": false
+        },
+        "tags": [],
+        "message": {
+          "direction": "inbound",
+          "body": "Hello, any update?",
+          "created_at": "2026-10-07T14:55:00.000Z"
+        }
+      },
+      "expected": {
+        "when": false,
+        "effects": []
+      }
+    },
+    {
+      "name": "ignores tickets waiting on the customer",
+      "ticket": {
+        "id": 128,
+        "subject": "Question about my order",
+        "status": "pending",
+        "assignee_id": null,
+        "created_at": "2026-10-06T14:00:00.000Z",
+        "updated_at": "2026-10-06T14:00:00.000Z",
+        "closed_at": null,
+        "customer": {
+          "name": "Ana Souza",
+          "email": "ana@example.com",
+          "vip": false
+        },
+        "tags": [],
+        "message": null
+      },
+      "expected": {
+        "when": false,
+        "effects": []
+      }
+    },
+    {
+      "name": "carries on down the list",
+      "ticket": {
+        "id": 129,
+        "subject": "Question about my order",
+        "status": "open",
+        "assignee_id": null,
+        "created_at": "2026-10-06T14:00:00.000Z",
+        "updated_at": "2026-10-06T14:00:00.000Z",
+        "closed_at": null,
+        "customer": {
+          "name": "Ana Souza",
+          "email": "ana@example.com",
+          "vip": false
+        },
+        "tags": [],
+        "message": {
+          "direction": "inbound",
+          "body": "Hello, any update?",
+          "created_at": "2026-10-07T14:55:00.000Z"
+        }
+      },
+      "expected": {
+        "when": true,
+        "effects": [
+          {
+            "type": "assign",
+            "teammateId": 3
+          }
+        ]
+      }
+    },
+    {
+      "name": "gets to the end of the list",
+      "ticket": {
+        "id": 130,
+        "subject": "Question about my order",
+        "status": "open",
+        "assignee_id": null,
+        "created_at": "2026-10-06T14:00:00.000Z",
+        "updated_at": "2026-10-06T14:00:00.000Z",
+        "closed_at": null,
+        "customer": {
+          "name": "Ana Souza",
+          "email": "ana@example.com",
+          "vip": false
+        },
+        "tags": [],
+        "message": {
+          "direction": "inbound",
+          "body": "Hello, any update?",
+          "created_at": "2026-10-07T14:55:00.000Z"
+        }
+      },
+      "expected": {
+        "when": true,
+        "effects": [
+          {
+            "type": "assign",
+            "teammateId": 4
+          }
+        ]
+      }
+    },
+    {
+      "name": "wraps around to the start",
+      "ticket": {
+        "id": 131,
+        "subject": "Question about my order",
+        "status": "open",
+        "assignee_id": null,
+        "created_at": "2026-10-06T14:00:00.000Z",
+        "updated_at": "2026-10-06T14:00:00.000Z",
+        "closed_at": null,
+        "customer": {
+          "name": "Ana Souza",
+          "email": "ana@example.com",
+          "vip": false
+        },
+        "tags": [],
+        "message": {
+          "direction": "inbound",
+          "body": "Hello, any update?",
+          "created_at": "2026-10-07T14:55:00.000Z"
+        }
+      },
+      "expected": {
+        "when": true,
+        "effects": [
+          {
+            "type": "assign",
+            "teammateId": 1
+          }
+        ]
+      }
+    },
+    {
+      "name": "does nothing when nobody is on the desk",
+      "teammates": [],
+      "ticket": {
+        "id": 132,
+        "subject": "Question about my order",
+        "status": "open",
+        "assignee_id": null,
+        "created_at": "2026-10-06T14:00:00.000Z",
+        "updated_at": "2026-10-06T14:00:00.000Z",
+        "closed_at": null,
+        "customer": {
+          "name": "Ana Souza",
+          "email": "ana@example.com",
+          "vip": false
+        },
+        "tags": [],
+        "message": {
+          "direction": "inbound",
+          "body": "Hello, any update?",
+          "created_at": "2026-10-07T14:55:00.000Z"
+        }
+      },
+      "expected": {
+        "when": true,
+        "effects": []
+      }
+    },
+    {
+      "name": "picks up where it left off",
+      "ticket": {
+        "id": 133,
+        "subject": "Question about my order",
+        "status": "open",
+        "assignee_id": null,
+        "created_at": "2026-10-06T14:00:00.000Z",
+        "updated_at": "2026-10-06T14:00:00.000Z",
+        "closed_at": null,
+        "customer": {
+          "name": "Ana Souza",
+          "email": "ana@example.com",
+          "vip": false
+        },
+        "tags": [],
+        "message": {
+          "direction": "inbound",
+          "body": "Hello, any update?",
+          "created_at": "2026-10-07T14:55:00.000Z"
+        }
+      },
+      "expected": {
+        "when": true,
+        "effects": [
+          {
+            "type": "assign",
+            "teammateId": 2
+          }
+        ]
+      }
+    }
+  ]
+}
