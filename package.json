@@ -18,6 +18,7 @@
     "generate": "npm run generate -w @front-desk/contract",
     "mail:drop": "node legacy/bin/mail-drop.js",
     "rules:parity": "tsx scripts/rules-parity.ts",
+    "canary": "tsx scripts/canary.ts",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit -p tsconfig.json && npm run typecheck --workspaces --if-present",
     "test": "vitest run",
