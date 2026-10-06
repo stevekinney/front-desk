@@ -259,6 +259,10 @@ export interface components {
             /** @description A hex color such as "#2f855a". */
             color: string;
         };
+        TagWithCount: components["schemas"]["Tag"] & {
+            /** @description Tickets carrying this tag, in the requested status if one was given. */
+            ticketCount: number;
+        };
         TagInput: {
             name: string;
             color?: string;
@@ -610,22 +614,26 @@ export interface operations {
     };
     listTags: {
         parameters: {
-            query?: never;
+            query?: {
+                /** @description Count only tickets in this status. Omit to count every ticket. */
+                status?: components["schemas"]["TicketStatus"];
+            };
             header?: never;
             path?: never;
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description Every tag. */
+            /** @description Every tag, with the number of tickets that carry it. */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["Tag"][];
+                    "application/json": components["schemas"]["TagWithCount"][];
                 };
             };
+            400: components["responses"]["BadRequest"];
         };
     };
     createTag: {

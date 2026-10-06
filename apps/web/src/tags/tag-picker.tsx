@@ -15,7 +15,7 @@ export function TagPicker({
   tags: Tag[];
   onChange: (tags: Tag[]) => void;
 }) {
-  const { data: allTags = [] } = useApi(listTags, 'tags');
+  const { data: allTags = [] } = useApi(() => listTags(), 'tags');
   const [selected, setSelected] = useState('');
   const available = allTags.filter((tag) => !tags.some((t) => t.id === tag.id));
 

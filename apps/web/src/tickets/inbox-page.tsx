@@ -55,7 +55,7 @@ export function InboxPage() {
             ))}
           </ul>
         </nav>
-        <TagSidebar />
+        <TagSidebar status={status} />
       </aside>
 
       <section className="ticket-list" aria-label="Tickets">

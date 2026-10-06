@@ -14,6 +14,7 @@ export type SimulatedMail = Schemas['SimulatedMail'];
 export type Sla = Schemas['Sla'];
 export type SlaState = Sla['state'];
 export type Tag = Schemas['Tag'];
+export type TagWithCount = Schemas['TagWithCount'];
 export type TagInput = Schemas['TagInput'];
 export type Teammate = Schemas['Teammate'];
 export type Ticket = Schemas['Ticket'];

@@ -1,12 +1,15 @@
 import { Link, useSearchParams } from 'react-router';
 
-import type { Tag } from '@front-desk/contract';
+import type { TagWithCount, TicketStatus } from '@front-desk/contract';
 
 import { useApi } from '../use-api.ts';
 import { listTags } from './tags-api.ts';
 
-export function TagSidebar() {
-  const { data: tags = [] } = useApi<Tag[]>(listTags, 'tags');
+export function TagSidebar({ status }: { status?: TicketStatus }) {
+  const { data: tags = [] } = useApi<TagWithCount[]>(
+    () => listTags(status),
+    `tags:${status ?? 'all'}`,
+  );
   const [params] = useSearchParams();
   const active = params.get('tag');
 
@@ -24,7 +27,7 @@ export function TagSidebar() {
                 className={active === tag.name ? 'active' : undefined}
               >
                 <span className="tag-dot" style={{ background: tag.color }} />
-                {tag.name}
+                {tag.name} <span className="tag-count">{tag.ticketCount}</span>
               </Link>
             </li>
           );

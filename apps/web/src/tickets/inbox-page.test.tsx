@@ -6,11 +6,23 @@ import { makeTicket, mockApi, priya } from '../../test/mock-api.ts';
 import { renderApp } from '../../test/render.tsx';
 
 const billing = { id: 1, name: 'billing', color: '#2b6cb0' };
+const empty = { id: 2, name: 'shipping', color: '#718096' };
 
 function setup() {
   return mockApi()
     .on('GET', '/teammates', [priya])
-    .on('GET', '/tags', [billing])
+    .on('GET', '/tags?status=open', [
+      { ...billing, ticketCount: 4 },
+      { ...empty, ticketCount: 0 },
+    ])
+    .on('GET', '/tags?status=closed', [
+      { ...billing, ticketCount: 1 },
+      { ...empty, ticketCount: 2 },
+    ])
+    .on('GET', '/tags', [
+      { ...billing, ticketCount: 5 },
+      { ...empty, ticketCount: 2 },
+    ])
     .on('GET', '/tickets?status=open', [
       makeTicket({ id: 1, subject: 'Charged twice', tags: [billing], assignee: priya }),
       makeTicket({
@@ -61,10 +73,25 @@ describe('InboxPage', () => {
     renderApp('/');
     const tags = await screen.findByRole('navigation', { name: 'Tags' });
 
-    await userEvent.click(await within(tags).findByRole('link', { name: 'billing' }));
+    await userEvent.click(await within(tags).findByRole('link', { name: /^billing/ }));
 
     expect(await screen.findByText(/tagged/)).toBeInTheDocument();
     expect(api.calls.map((c) => c.path)).toContain('/tickets?status=open&tag=billing');
+  });
+
+  it('shows tag counts that follow the status, including zero', async () => {
+    setup();
+    renderApp('/');
+    const tags = await screen.findByRole('navigation', { name: 'Tags' });
+
+    expect(await within(tags).findByRole('link', { name: 'billing 4' })).toBeInTheDocument();
+    expect(within(tags).getByRole('link', { name: 'shipping 0' })).toBeInTheDocument();
+
+    await userEvent.click(screen.getByRole('link', { name: 'Closed' }));
+    expect(await within(tags).findByRole('link', { name: 'billing 1' })).toBeInTheDocument();
+
+    await userEvent.click(screen.getByRole('link', { name: 'All' }));
+    expect(await within(tags).findByRole('link', { name: 'billing 5' })).toBeInTheDocument();
   });
 
   it('links each ticket to its detail page', async () => {

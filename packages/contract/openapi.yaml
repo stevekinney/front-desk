@@ -220,15 +220,24 @@ paths:
   /tags:
     get:
       operationId: listTags
+      parameters:
+        - name: status
+          in: query
+          required: false
+          description: Count only tickets in this status. Omit to count every ticket.
+          schema:
+            $ref: '#/components/schemas/TicketStatus'
       responses:
         '200':
-          description: Every tag.
+          description: Every tag, with the number of tickets that carry it.
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Tag'
+                  $ref: '#/components/schemas/TagWithCount'
+        '400':
+          $ref: '#/components/responses/BadRequest'
     post:
       operationId: createTag
       requestBody:
@@ -414,6 +423,17 @@ components:
         color:
           type: string
           description: A hex color such as "#2f855a".
+
+    TagWithCount:
+      allOf:
+        - $ref: '#/components/schemas/Tag'
+        - type: object
+          required: [ticketCount]
+          properties:
+            ticketCount:
+              type: integer
+              minimum: 0
+              description: Tickets carrying this tag, in the requested status if one was given.
 
     TagInput:
       type: object

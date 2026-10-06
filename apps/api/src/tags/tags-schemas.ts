@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+import { ticketStatusSchema } from '../tickets/tickets-schemas.ts';
+
 export const tagInputSchema = z.object({
   name: z.string().trim().min(1, 'Name is required').max(32),
   color: z
@@ -9,3 +11,7 @@ export const tagInputSchema = z.object({
 });
 
 export type TagInput = z.infer<typeof tagInputSchema>;
+
+export const listTagsQuerySchema = z.object({ status: ticketStatusSchema.optional() });
+
+export type ListTagsQuery = z.infer<typeof listTagsQuerySchema>;

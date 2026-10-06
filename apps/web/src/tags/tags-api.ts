@@ -1,9 +1,9 @@
-import type { Tag, TagInput } from '@front-desk/contract';
+import type { Tag, TagInput, TagWithCount, TicketStatus } from '@front-desk/contract';
 
 import { apiRequest } from '../api-client.ts';
 
-export function listTags(): Promise<Tag[]> {
-  return apiRequest<Tag[]>('/tags');
+export function listTags(status?: TicketStatus): Promise<TagWithCount[]> {
+  return apiRequest<TagWithCount[]>(status ? `/tags?status=${status}` : '/tags');
 }
 
 export function createTag(input: TagInput): Promise<Tag> {

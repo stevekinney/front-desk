@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import type { Tag } from '@front-desk/contract';
+import type { Tag, TagWithCount } from '@front-desk/contract';
 
 import type { Database } from '../database.ts';
 import { HttpError, idParam, notFound, parse } from '../http.ts';
@@ -14,13 +14,14 @@ import {
   removeTagFromTicket,
   tagsForTicket,
 } from './tags-repository.ts';
-import { tagInputSchema } from './tags-schemas.ts';
+import { listTagsQuerySchema, tagInputSchema } from './tags-schemas.ts';
 
 export function tagsRouter(db: Database): Router {
   const router = Router();
 
-  router.get('/tags', (_req, res) => {
-    res.json(listTags(db) satisfies Tag[]);
+  router.get('/tags', (req, res) => {
+    const { status } = parse(listTagsQuerySchema, req.query);
+    res.json(listTags(db, status) satisfies TagWithCount[]);
   });
 
   router.post('/tags', (req, res) => {

@@ -10,7 +10,7 @@
       "acceptance/FD-01.ui.test.ts"
     ],
     "lesson": "https://stevekinney.com/courses/ai-development-setup/why-systems#start-with-a-blank-canvas",
-    "passes": false
+    "passes": true
   },
   {
     "id": "FD-02",

@@ -1,7 +1,7 @@
 import request from 'supertest';
 import { beforeAll, describe, expect, it } from 'vitest';
 
-import type { Tag, Ticket } from '@front-desk/contract';
+import type { Tag, TagWithCount, Ticket } from '@front-desk/contract';
 
 import { createTestDesk, type TestDesk } from '../../test/helpers.ts';
 
@@ -74,5 +74,54 @@ describe('tags', () => {
     const ticketId = await desk.receive({ from: 'oz@example.com', subject: 'Real' });
     await request(desk.app).put(`/api/tickets/999999/tags/${tag.id}`).expect(404);
     await request(desk.app).put(`/api/tickets/${ticketId}/tags/999999`).expect(404);
+  });
+
+  describe('ticket counts', () => {
+    async function countFor(tagId: number, status?: string): Promise<number | undefined> {
+      const res = await request(desk.app)
+        .get('/api/tags')
+        .query(status ? { status } : {})
+        .expect(200);
+      return (res.body as TagWithCount[]).find((t) => t.id === tagId)?.ticketCount;
+    }
+
+    it('counts tickets by status and follows tag changes', async () => {
+      const tag = await createTag('counted');
+      const ids = [
+        await desk.receive({ from: 'c1@example.com', subject: 'Count one' }),
+        await desk.receive({ from: 'c2@example.com', subject: 'Count two' }),
+        await desk.receive({ from: 'c3@example.com', subject: 'Count three' }),
+      ];
+      for (const id of ids) await request(desk.app).put(`/api/tickets/${id}/tags/${tag.id}`);
+      await request(desk.app)
+        .patch(`/api/tickets/${ids[2]}/status`)
+        .send({ status: 'closed' })
+        .expect(200);
+
+      expect(await countFor(tag.id)).toBe(3);
+      expect(await countFor(tag.id, 'open')).toBe(2);
+      expect(await countFor(tag.id, 'closed')).toBe(1);
+      expect(await countFor(tag.id, 'pending')).toBe(0);
+
+      await request(desk.app).delete(`/api/tickets/${ids[0]}/tags/${tag.id}`).expect(200);
+      expect(await countFor(tag.id)).toBe(2);
+      expect(await countFor(tag.id, 'open')).toBe(1);
+    });
+
+    it('lists an untagged tag with a count of 0', async () => {
+      const tag = await createTag('lonely');
+      expect(await countFor(tag.id)).toBe(0);
+      expect(await countFor(tag.id, 'open')).toBe(0);
+    });
+
+    it('returns a numeric ticketCount for every tag', async () => {
+      const res = await request(desk.app).get('/api/tags').expect(200);
+      for (const tag of res.body as TagWithCount[]) expect(typeof tag.ticketCount).toBe('number');
+    });
+
+    it('rejects an unknown status', async () => {
+      const res = await request(desk.app).get('/api/tags?status=archived').expect(400);
+      expect(res.body.issues[0].path).toBe('status');
+    });
   });
 });

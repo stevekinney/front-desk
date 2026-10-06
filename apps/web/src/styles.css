@@ -121,6 +121,11 @@ textarea {
   border-radius: 50%;
 }
 
+.tag-count {
+  margin-left: auto;
+  color: var(--muted, #718096);
+}
+
 .ticket-list {
   padding: 1rem 1.5rem;
 }

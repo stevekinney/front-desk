@@ -1,4 +1,4 @@
-import type { Tag } from '@front-desk/contract';
+import type { Tag, TagWithCount, TicketStatus } from '@front-desk/contract';
 
 import type { Database } from '../database.ts';
 import type { TagInput } from './tags-schemas.ts';
@@ -13,11 +13,19 @@ function toTag(row: TagRow): Tag {
   return { id: row.id, name: row.name, color: row.color };
 }
 
-export function listTags(db: Database): Tag[] {
+/** Every tag with its ticket count. The status filter sits in the JOIN so empty tags stay. */
+export function listTags(db: Database, status?: TicketStatus): TagWithCount[] {
   const rows = db
-    .prepare('SELECT id, name, color FROM tags ORDER BY name')
-    .all() as unknown as TagRow[];
-  return rows.map(toTag);
+    .prepare(
+      `SELECT g.id, g.name, g.color, count(t.id) AS ticket_count
+         FROM tags g
+         LEFT JOIN ticket_tags tt ON tt.tag_id = g.id
+         LEFT JOIN tickets t ON t.id = tt.ticket_id AND (? IS NULL OR t.status = ?)
+        GROUP BY g.id
+        ORDER BY g.name`,
+    )
+    .all(status ?? null, status ?? null) as unknown as Array<TagRow & { ticket_count: number }>;
+  return rows.map((row) => ({ ...toTag(row), ticketCount: row.ticket_count }));
 }
 
 export function findTag(db: Database, id: number): Tag | null {
