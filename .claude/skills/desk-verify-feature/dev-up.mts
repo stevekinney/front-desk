@@ -9,7 +9,7 @@
  * stops it and nothing else.
  */
 import { spawn } from 'node:child_process';
-import { openSync, readFileSync } from 'node:fs';
+import { appendFileSync, existsSync, openSync, readFileSync, statSync } from 'node:fs';
 import { setTimeout as sleep } from 'node:timers/promises';
 
 import { log } from '../../lib/log.mts';
@@ -76,7 +76,10 @@ if (lockOwner !== null) {
 }
 
 // 3. Start it, detached, in its own process group so dev-down can stop all of it.
-const out = openSync(logFile, 'w');
+// Append, so the log of a server that died is still there after a restart.
+const logStart = existsSync(logFile) ? statSync(logFile).size : 0;
+appendFileSync(logFile, `\n── dev-up ${new Date().toISOString()} ──\n`);
+const out = openSync(logFile, 'a');
 const child = spawn('npm', ['run', 'dev'], {
   cwd: root,
   detached: true,
@@ -90,7 +93,9 @@ const deadline = Date.now() + 60_000;
 let webUrl: string | null = null;
 while (Date.now() < deadline && !exited) {
   // Vite moves to the next port if WEB_PORT is taken; trust what it prints.
-  const output = readFileSync(logFile, 'utf8').replace(/\x1b\[[0-9;]*m/g, '');
+  const output = readFileSync(logFile, 'utf8')
+    .slice(logStart)
+    .replace(/\x1b\[[0-9;]*m/g, '');
   const match = /Local:\s+(http:\/\/localhost:\d+)/.exec(output);
   webUrl = match?.[1] ?? null;
   if (webUrl && (await responds(healthUrl)) && (await responds(webUrl))) break;
