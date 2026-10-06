@@ -49,7 +49,8 @@ function decodeWords(value) {
   var joined = value.replace(/(\?=)\s+(=\?)/g, '$1$2');
   return joined.replace(ENCODED_WORD, function (_, charset, encoding, text) {
     var bytes = encoding.toUpperCase() === 'B' ? Buffer.from(text, 'base64') : qDecodeBytes(text);
-    return bytes.toString('utf8');
+    // front-desk patch 3 (see PATCHES.md): decode ISO-8859-1 encoded words as Latin-1.
+    return bytes.toString(/^iso-8859-1$/i.test(charset) ? 'latin1' : 'utf8');
   });
 }
 

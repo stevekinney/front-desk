@@ -153,6 +153,31 @@ describe('pollOnce', () => {
     expect(message.body).toContain('crème brûlée');
   });
 
+  it('decodes Latin-1 subjects in raw .eml files', async () => {
+    fs.copyFileSync(
+      path.resolve(import.meta.dirname, '../../inbox/0039-business-card-proofs-delivery.eml'),
+      path.join(config.inboxDir, '0039-business-card-proofs-delivery.eml'),
+    );
+
+    await pollOnce();
+
+    const [ticket] = await all('SELECT subject FROM tickets', []);
+    expect(ticket.subject).toBe('Épreuves des cartes de visite : délai de livraison?');
+  });
+
+  it('decodes a Latin-1 subject and sender name from a dropped fixture', async () => {
+    await dropFixture('poster-reprint-quote');
+
+    await pollOnce();
+
+    const [ticket] = await all('SELECT subject FROM tickets', []);
+    expect(ticket.subject).toBe("Devis pour une réimpression d'affiches");
+    const [message] = await all('SELECT from_name FROM messages', []);
+    expect(message.from_name).toBe('Renée Dubé');
+    const [customer] = await all('SELECT name FROM customers', []);
+    expect(customer.name).toBe('Renée Dubé');
+  });
+
   it('skips files it cannot parse and keeps going', async () => {
     fs.writeFileSync(path.join(config.inboxDir, '0001-broken.json'), '{ not json');
     deliver('0002-fine.json', { from: { email: 'ana@example.com' }, subject: 'Fine', text: 'Hi' });

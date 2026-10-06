@@ -57,3 +57,17 @@ describe('seedDatabase', () => {
     expect(newest.at).toBe('2026-10-07T15:30:00.000Z');
   });
 });
+
+describe('seeded Latin-1 subjects', () => {
+  it('decodes the subject of ticket 36', () => {
+    const row = db
+      .prepare(
+        `SELECT t.id, t.subject FROM tickets t
+         JOIN mailroom_seen s ON s.ticket_id = t.id
+         WHERE s.filename = ?`,
+      )
+      .get('0039-business-card-proofs-delivery.eml') as { id: number; subject: string };
+    expect(row.id).toBe(36);
+    expect(row.subject).toBe('Épreuves des cartes de visite : délai de livraison?');
+  });
+});

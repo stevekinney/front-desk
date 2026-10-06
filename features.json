@@ -22,7 +22,7 @@
       "acceptance/FD-02.test.ts"
     ],
     "lesson": "https://stevekinney.com/courses/ai-development-setup/the-enforcement-ladder#the-rungs",
-    "passes": false
+    "passes": true
   },
   {
     "id": "FD-03",

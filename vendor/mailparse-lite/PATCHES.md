@@ -24,6 +24,20 @@ Some senders put raw UTF-8 into a body that is declared quoted-printable.
 garbage. The patch encodes those characters back to their UTF-8 bytes before
 decoding.
 
+## 3. Decode ISO-8859-1 encoded words (2026-10)
+
+`decodeWords` in 0.3.2 read the charset of each encoded word and ignored it,
+decoding every word as UTF-8. A Latin-1 byte such as 0xE9 ("é") is not valid
+UTF-8, so subjects and sender names from Latin-1 mail programs came out with
+U+FFFD replacement characters. The patch decodes words labelled ISO-8859-1
+(case-insensitive) with `Buffer#toString('latin1')`. Other charsets still
+decode as UTF-8.
+
+This can't be handled in the mailroom: `parse` throws the charset away, and
+U+FFFD can't be turned back into the original byte. The only mailroom option
+would be rewriting the encoded words before calling `parse`, which means
+copying the Q decoder into `legacy/ingest/parse.js`.
+
 ## Before adding a patch
 
 Every patch here has to be carried by hand forever, and nobody upstream will

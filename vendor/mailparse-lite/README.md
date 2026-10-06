@@ -14,13 +14,13 @@ mail.text; // first text/plain part
 ## What it handles
 
 - Folded (multi-line) headers
-- Encoded words in headers (`=?UTF-8?B?...?=` and `=?UTF-8?Q?...?=`)
+- Encoded words in headers (`=?UTF-8?B?...?=`, `=?UTF-8?Q?...?=`, and ISO-8859-1 in either encoding)
 - `quoted-printable` and `base64` bodies
 - `multipart/*` messages: returns the first `text/plain` part
 
 ## What it doesn't
 
-- Character sets other than UTF-8 and US-ASCII
+- Character sets other than UTF-8, US-ASCII and (in header encoded words only) ISO-8859-1
 - Attachments
 - HTML-only messages (you get an empty `text`)
 
