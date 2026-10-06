@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check:
+    name: check (Node ${{ matrix.node }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: ['24', '26']
+    env:
+      TZ: UTC
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+
+      - run: npm ci
+
+      - name: Pick a test order
+        run: |
+          seed="${TEST_SEED:-$(( (RANDOM << 15 | RANDOM) % 100000 + 1 ))}"
+          echo "TEST_SEED=$seed" >> "$GITHUB_ENV"
+          echo "Shuffled test order, seed $seed"
+          echo "Reproduce locally with: TEST_SEED=$seed npm run check"
+
+      - name: npm run check
+        run: |
+          echo "Test order seed: $TEST_SEED"
+          npm run check

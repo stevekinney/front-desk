@@ -9,3 +9,4 @@ inbox/drop-*
 .env
 .env.local
 exports/
+.vitest/

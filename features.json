@@ -1,0 +1,139 @@
+[
+  {
+    "id": "FD-01",
+    "title": "Tag counts in the sidebar",
+    "size": "S",
+    "core": true,
+    "spec": "specs/FD-01.md",
+    "acceptance": [
+      "acceptance/FD-01.test.ts",
+      "acceptance/FD-01.ui.test.ts"
+    ],
+    "lesson": "https://stevekinney.com/courses/ai-development-setup/why-systems#start-with-a-blank-canvas",
+    "passes": false
+  },
+  {
+    "id": "FD-02",
+    "title": "Latin-1 subjects are garbled",
+    "size": "S",
+    "core": false,
+    "spec": "specs/FD-02.md",
+    "acceptance": [
+      "acceptance/FD-02.test.ts"
+    ],
+    "lesson": "https://stevekinney.com/courses/ai-development-setup/the-enforcement-ladder#the-rungs",
+    "passes": false
+  },
+  {
+    "id": "FD-03",
+    "title": "CI is red, laptops are green",
+    "size": "S",
+    "core": true,
+    "spec": "specs/FD-03.md",
+    "acceptance": [
+      "acceptance/FD-03.test.ts"
+    ],
+    "lesson": "https://stevekinney.com/courses/ai-development-setup/exemplar-subagents#reenactor",
+    "passes": false
+  },
+  {
+    "id": "FD-04",
+    "title": "Pending-customer pauses the SLA clock",
+    "size": "M",
+    "core": true,
+    "spec": "specs/FD-04.md",
+    "acceptance": [
+      "acceptance/FD-04.test.ts",
+      "acceptance/FD-04.ui.test.ts"
+    ],
+    "lesson": "https://stevekinney.com/courses/ai-development-setup/patterns-for-deciding-what-to-build#fault-localization-first",
+    "passes": false
+  },
+  {
+    "id": "FD-05",
+    "title": "Create a ticket from the web",
+    "size": "M",
+    "core": true,
+    "spec": "specs/FD-05.md",
+    "acceptance": [
+      "acceptance/FD-05.test.ts",
+      "acceptance/FD-05.ui.test.ts"
+    ],
+    "lesson": "https://stevekinney.com/courses/ai-development-setup/exemplar-skills#more-to-adapt",
+    "passes": false
+  },
+  {
+    "id": "FD-06",
+    "title": "Ticket priority end to end",
+    "size": "M",
+    "core": false,
+    "spec": "specs/FD-06.md",
+    "acceptance": [
+      "acceptance/FD-06.test.ts",
+      "acceptance/FD-06.ui.test.ts"
+    ],
+    "lesson": "https://stevekinney.com/courses/ai-development-setup/patterns-for-deciding-what-to-build#research-plan-implement",
+    "passes": false
+  },
+  {
+    "id": "FD-07",
+    "title": "Business-hours settings drive the SLA",
+    "size": "M",
+    "core": false,
+    "spec": "specs/FD-07.md",
+    "acceptance": [
+      "acceptance/FD-07.test.ts",
+      "acceptance/FD-07.ui.test.ts"
+    ],
+    "lesson": "https://stevekinney.com/courses/ai-development-setup/exemplar-subagents#junior-engineer",
+    "passes": false
+  },
+  {
+    "id": "FD-08",
+    "title": "Port the automation rules to TypeScript",
+    "size": "L",
+    "core": true,
+    "spec": "specs/FD-08.md",
+    "acceptance": [
+      "acceptance/FD-08.test.ts"
+    ],
+    "lesson": "https://stevekinney.com/courses/ai-development-setup/patterns-for-running-unattended-work#parallel-worktree-swarm",
+    "passes": false
+  },
+  {
+    "id": "FD-09",
+    "title": "Auto-tag incoming mail",
+    "size": "M",
+    "core": true,
+    "spec": "specs/FD-09.md",
+    "acceptance": [
+      "acceptance/FD-09.test.ts"
+    ],
+    "lesson": "https://stevekinney.com/courses/ai-development-setup/the-enforcement-ladder#blast-radius",
+    "passes": false
+  },
+  {
+    "id": "FD-10",
+    "title": "Collapse state into status",
+    "size": "M",
+    "core": true,
+    "spec": "specs/FD-10.md",
+    "acceptance": [
+      "acceptance/FD-10.test.ts"
+    ],
+    "lesson": "https://stevekinney.com/courses/ai-development-setup/exemplar-skills#ticket-dossier",
+    "passes": false
+  },
+  {
+    "id": "FD-11",
+    "title": "Merge duplicate tickets",
+    "size": "L",
+    "core": true,
+    "spec": "specs/FD-11.md",
+    "acceptance": [
+      "acceptance/FD-11.test.ts"
+    ],
+    "lesson": "https://stevekinney.com/courses/ai-development-setup/exemplar-skills#interview-to-spec",
+    "passes": false
+  }
+]

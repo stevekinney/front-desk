@@ -6,3 +6,4 @@ packages/contract/src/generated
 inbox
 fixtures
 vendor
+features.json
