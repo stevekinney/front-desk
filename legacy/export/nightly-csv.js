@@ -17,6 +17,7 @@ const path = require('path');
 
 const config = require('../config');
 const db = require('../db/connection');
+const businessHours = require('../lib/business-hours');
 
 const COLUMNS = [
   'ticket_id',
@@ -109,6 +110,20 @@ if (require.main === module) {
     process.exit(2);
   }
   const day = arg || deskDay(new Date(Date.now() - 24 * 60 * 60 * 1000));
+  // This process doesn't share memory with the API, so business_minutes needs the saved hours.
+  businessHours.load(function (loadErr) {
+    if (loadErr) {
+      db.close();
+      console.error('[export] ' + loadErr.message);
+      process.exitCode = 1;
+      return;
+    }
+    runExport(day);
+  });
+}
+
+/** @param {string} day */
+function runExport(day) {
   exportDay(day, function (err, file, count) {
     db.close();
     if (err) {

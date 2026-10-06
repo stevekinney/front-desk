@@ -9,6 +9,7 @@
 
 const config = require('./config');
 const db = require('./db/connection');
+const businessHours = require('./lib/business-hours');
 const cache = require('./lib/cache');
 const clock = require('./lib/clock');
 const drop = require('./lib/drop');
@@ -25,6 +26,7 @@ const TicketPause = require('./models/ticket-pause');
 module.exports = {
   config: config,
   db: db,
+  businessHours: businessHours,
   cache: cache,
   clock: clock,
   drop: drop,

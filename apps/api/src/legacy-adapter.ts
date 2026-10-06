@@ -17,6 +17,19 @@ export interface LegacySlaSummary {
   remainingMinutes: number | null;
 }
 
+export interface LegacyBusinessHours {
+  openHour: number;
+  closeHour: number;
+  timeZone: string;
+  slaHours: number;
+}
+
+export interface LegacySlaReportRow {
+  ticketId: number;
+  status: 'open' | 'pending' | 'closed';
+  businessMinutes: number;
+}
+
 export interface LegacyDelivery {
   filename: string;
   ticketId: number;
@@ -30,7 +43,15 @@ interface LegacyMailroom {
   models: {
     Ticket: { updateStatus(id: number, status: string, cb: Callback<unknown | null>): void };
   };
-  sla: { forTicket(ticketId: number, cb: Callback<LegacySlaSummary | null>): void };
+  businessHours: {
+    load(cb: Callback<LegacyBusinessHours>): void;
+    save(settings: LegacyBusinessHours, cb: Callback<LegacyBusinessHours>): void;
+    get(): LegacyBusinessHours;
+  };
+  sla: {
+    forTicket(ticketId: number, cb: Callback<LegacySlaSummary | null>): void;
+    report(cb: Callback<LegacySlaReportRow[]>): void;
+  };
   poller: {
     pollOnce(cb: Callback<LegacyDelivery[]>): void;
     start(cb: Callback<boolean>): void;
@@ -51,8 +72,16 @@ interface LegacyMailroom {
 const require = createRequire(import.meta.url);
 const mailroom = require('@front-desk/legacy') as LegacyMailroom;
 
-/** Create the mailroom's tables if they're missing. */
-export const migrateLegacy = promisify(mailroom.db.migrate);
+const migrate = promisify(mailroom.db.migrate);
+const loadBusinessHours = promisify(
+  mailroom.businessHours.load,
+) as () => Promise<LegacyBusinessHours>;
+
+/** Create the mailroom's tables if they're missing, then load the saved business hours. */
+export async function migrateLegacy(): Promise<void> {
+  await migrate();
+  await loadBusinessHours();
+}
 
 /** Ingest every unseen file in the inbox now, without waiting for the poller. */
 export const pollInbox = promisify(mailroom.poller.pollOnce) as () => Promise<LegacyDelivery[]>;
@@ -110,3 +139,16 @@ export const dropFixture = promisify(mailroom.drop.dropFixture) as (
 ) => Promise<string>;
 
 export const listFixtures = promisify(mailroom.drop.listFixtures) as () => Promise<string[]>;
+
+/** The desk's current business hours, as saved. */
+export async function getBusinessHours(): Promise<LegacyBusinessHours> {
+  return loadBusinessHours();
+}
+
+/** Save new business hours. Every cached SLA is dropped, so the next read uses them. */
+export const saveBusinessHours = promisify(mailroom.businessHours.save) as (
+  settings: LegacyBusinessHours,
+) => Promise<LegacyBusinessHours>;
+
+/** Every ticket's business minutes under the current settings. */
+export const getSlaReport = promisify(mailroom.sla.report) as () => Promise<LegacySlaReportRow[]>;

@@ -258,6 +258,47 @@ paths:
         '409':
           $ref: '#/components/responses/Conflict'
 
+  /settings/business-hours:
+    get:
+      operationId: getBusinessHours
+      responses:
+        '200':
+          description: The desk's current business hours and SLA length.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BusinessHours'
+    put:
+      operationId: updateBusinessHours
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BusinessHours'
+      responses:
+        '200':
+          description: The saved settings.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BusinessHours'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /reports/sla:
+    get:
+      operationId: getSlaReport
+      responses:
+        '200':
+          description: Every ticket's business minutes, under the current settings.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SlaReportRow'
+
   /canned-replies:
     get:
       operationId: listCannedReplies
@@ -590,6 +631,40 @@ components:
           type: string
         body:
           type: string
+
+    BusinessHours:
+      type: object
+      required: [openHour, closeHour, timeZone, slaHours]
+      properties:
+        openHour:
+          type: integer
+          minimum: 0
+          maximum: 24
+          description: The hour the desk opens. Must be before closeHour.
+        closeHour:
+          type: integer
+          minimum: 0
+          maximum: 24
+          description: The hour the desk closes; this hour itself is not a business hour.
+        timeZone:
+          type: string
+          description: An IANA time zone name, such as America/New_York.
+        slaHours:
+          type: integer
+          minimum: 1
+          description: Business hours a ticket may stay open.
+
+    SlaReportRow:
+      type: object
+      required: [ticketId, status, businessMinutes]
+      properties:
+        ticketId:
+          type: integer
+        status:
+          $ref: '#/components/schemas/TicketStatus'
+        businessMinutes:
+          type: integer
+          description: Business minutes from arrival until closed, or until now if still open.
 
     SimulatedMail:
       type: object

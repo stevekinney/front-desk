@@ -3,27 +3,41 @@
 /**
  * Service-level clock.
  *
- * A ticket must be closed within `config.sla.hours` business hours of
- * arriving. Business hours are weekdays between `openHour` and `closeHour`
- * in the support desk's time zone. There are no holidays.
+ * A ticket must be closed within `slaHours` business hours of arriving.
+ * Business hours are weekdays between `openHour` and `closeHour` in the
+ * support desk's time zone, as set in lib/business-hours.js. There are no
+ * holidays.
  */
 
-const config = require('../config');
+const businessHours = require('./business-hours');
 const cache = require('./cache');
 const clock = require('./clock');
 const Ticket = require('../models/ticket');
 const TicketPause = require('../models/ticket-pause');
 
 const MINUTE = 60 * 1000;
-const HOUR = 60 * MINUTE;
 const AT_RISK_MINUTES = 120;
 
-const wallClockFormat = new Intl.DateTimeFormat('en-US', {
-  timeZone: config.sla.timeZone,
-  weekday: 'short',
-  hour: 'numeric',
-  hourCycle: 'h23',
-});
+const QUARTER_HOUR = 15 * MINUTE;
+
+/** One formatter per time zone, because the zone is a setting that can change. */
+/** @type {Map<string, Intl.DateTimeFormat>} */
+const wallClockFormats = new Map();
+
+/** @param {string} timeZone */
+function wallClockFormat(timeZone) {
+  let format = wallClockFormats.get(timeZone);
+  if (!format) {
+    format = new Intl.DateTimeFormat('en-US', {
+      timeZone: timeZone,
+      weekday: 'short',
+      hour: 'numeric',
+      hourCycle: 'h23',
+    });
+    wallClockFormats.set(timeZone, format);
+  }
+  return format;
+}
 
 /**
  * Weekday and hour on the support desk's wall clock.
@@ -32,7 +46,7 @@ const wallClockFormat = new Intl.DateTimeFormat('en-US', {
  * @returns {{ weekday: string, hour: number }}
  */
 function wallClock(ms) {
-  const parts = wallClockFormat.formatToParts(new Date(ms));
+  const parts = wallClockFormat(businessHours.get().timeZone).formatToParts(new Date(ms));
   let weekday = '';
   let hour = 0;
   parts.forEach(function (part) {
@@ -48,22 +62,24 @@ function isBusinessDay(weekday) {
 }
 
 /**
- * Is the desk staffed during this hour of the day? 9 to 5: the 17:00 hour is closed.
+ * Is the desk staffed during this hour of the day? From the opening hour up to,
+ * but not including, the closing hour.
  *
  * @param {number} hour
  */
 function isBusinessHour(hour) {
-  return hour >= config.sla.openHour && hour < config.sla.closeHour;
+  const settings = businessHours.get();
+  return hour >= settings.openHour && hour < settings.closeHour;
 }
 
 /**
- * Our time zone is a whole number of hours off UTC, so local hours start on
- * UTC hour boundaries.
+ * Every real UTC offset is a multiple of 15 minutes, so local hours start on
+ * UTC quarter-hour boundaries, even in zones like Asia/Kolkata (+5:30).
  *
  * @param {number} ms
  */
 function startOfNextHour(ms) {
-  return (Math.floor(ms / HOUR) + 1) * HOUR;
+  return (Math.floor(ms / QUARTER_HOUR) + 1) * QUARTER_HOUR;
 }
 
 /** @param {number} ms */
@@ -154,7 +170,7 @@ function snapshot(ticket, pauses) {
   else if (!pausedAt) pausedAt = ticket.updated_at || null;
   const due = addBusinessMinutes(
     new Date(ticket.created_at),
-    config.sla.hours * 60 + pausedMinutes,
+    businessHours.get().slaHours * 60 + pausedMinutes,
   );
   return {
     ticketId: ticket.id,
@@ -215,18 +231,65 @@ function summarize(snap, now) {
  * @param {(err: Error | null, summary?: SlaSummary | null) => void} cb
  */
 function forTicket(ticketId, cb) {
-  const key = 'sla:' + ticketId;
-  const cached = cache.get(key);
-  if (cached) {
-    return setImmediate(cb, null, summarize(cached, clock.now()));
-  }
-  Ticket.find(ticketId, function (err, ticket) {
-    if (err) return cb(err);
-    if (!ticket) return cb(null, null);
-    TicketPause.where({ ticket_id: ticketId }, function (pauseErr, pauses) {
-      if (pauseErr) return cb(pauseErr);
-      const snap = cache.set(key, snapshot(ticket, pauses));
-      cb(null, summarize(snap, clock.now()));
+  withSettings(function (settingsErr) {
+    if (settingsErr) return cb(settingsErr);
+    const key = 'sla:' + ticketId;
+    const cached = cache.get(key);
+    if (cached) return cb(null, summarize(cached, clock.now()));
+    Ticket.find(ticketId, function (err, ticket) {
+      if (err) return cb(err);
+      if (!ticket) return cb(null, null);
+      TicketPause.where({ ticket_id: ticketId }, function (pauseErr, pauses) {
+        if (pauseErr) return cb(pauseErr);
+        const snap = cache.set(key, snapshot(ticket, pauses));
+        cb(null, summarize(snap, clock.now()));
+      });
+    });
+  });
+}
+
+/**
+ * Run `next` once the saved business hours are in memory.
+ *
+ * @param {(err: Error | null) => void} next
+ */
+function withSettings(next) {
+  if (businessHours.isLoaded()) return setImmediate(next, null);
+  businessHours.load(function (err) {
+    next(err);
+  });
+}
+
+/**
+ * @typedef {Object} SlaReportRow
+ * @property {number} ticketId
+ * @property {string} status
+ * @property {number} businessMinutes  From arrival until closed, or until now.
+ */
+
+/**
+ * Every ticket's business minutes under the current settings. Worked out here
+ * rather than in the `sla_report` view, so it follows the frozen clock.
+ *
+ * @param {(err: Error | null, rows?: SlaReportRow[]) => void} cb
+ */
+function report(cb) {
+  withSettings(function (settingsErr) {
+    if (settingsErr) return cb(settingsErr);
+    Ticket.where({}, function (err, tickets) {
+      if (err) return cb(err);
+      const now = clock.now();
+      cb(
+        null,
+        (tickets || []).map(function (/** @type {any} */ ticket) {
+          const end = ticket.closed_at ? new Date(ticket.closed_at) : now;
+          return {
+            ticketId: ticket.id,
+            status: ticket.status,
+            businessMinutes: businessMinutesBetween(new Date(ticket.created_at), end),
+          };
+        }),
+      );
     });
   });
 }
@@ -237,4 +300,5 @@ module.exports = {
   snapshot: snapshot,
   summarize: summarize,
   forTicket: forTicket,
+  report: report,
 };

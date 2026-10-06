@@ -92,3 +92,15 @@ CREATE TABLE IF NOT EXISTS mailroom_seen (
   ticket_id   INTEGER REFERENCES tickets (id),
   ingested_at TEXT NOT NULL
 );
+
+-- The desk's hours, time zone and SLA length: always exactly one row.
+CREATE TABLE IF NOT EXISTS business_hours (
+  id          INTEGER PRIMARY KEY CHECK (id = 1),
+  open_hour   INTEGER NOT NULL,
+  close_hour  INTEGER NOT NULL,
+  time_zone   TEXT NOT NULL,
+  sla_hours   INTEGER NOT NULL
+);
+
+INSERT OR IGNORE INTO business_hours (id, open_hour, close_hour, time_zone, sla_hours)
+  VALUES (1, 9, 17, 'America/New_York', 8);

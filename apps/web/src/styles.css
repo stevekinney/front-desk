@@ -364,3 +364,19 @@ textarea {
   border-radius: 6px;
   margin: 0;
 }
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.settings-form {
+  display: grid;
+  gap: 0.5rem;
+  max-width: 24rem;
+}
+
+.settings-form button {
+  justify-self: start;
+}

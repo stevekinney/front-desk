@@ -5,12 +5,14 @@ export type { components, operations, paths };
 type Schemas = components['schemas'];
 
 export type ApiError = Schemas['Error'];
+export type BusinessHours = Schemas['BusinessHours'];
 export type CannedReply = Schemas['CannedReply'];
 export type CannedReplyInput = Schemas['CannedReplyInput'];
 export type Customer = Schemas['Customer'];
 export type Message = Schemas['Message'];
 export type ReplyInput = Schemas['ReplyInput'];
 export type SimulatedMail = Schemas['SimulatedMail'];
+export type SlaReportRow = Schemas['SlaReportRow'];
 export type Sla = Schemas['Sla'];
 export type SlaState = Sla['state'];
 export type Tag = Schemas['Tag'];

@@ -164,6 +164,38 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/settings/business-hours": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getBusinessHours"];
+        put: operations["updateBusinessHours"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/reports/sla": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getSlaReport"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/canned-replies": {
         parameters: {
             query?: never;
@@ -328,6 +360,22 @@ export interface components {
         CannedReplyInput: {
             title: string;
             body: string;
+        };
+        BusinessHours: {
+            /** @description The hour the desk opens. Must be before closeHour. */
+            openHour: number;
+            /** @description The hour the desk closes; this hour itself is not a business hour. */
+            closeHour: number;
+            /** @description An IANA time zone name, such as America/New_York. */
+            timeZone: string;
+            /** @description Business hours a ticket may stay open. */
+            slaHours: number;
+        };
+        SlaReportRow: {
+            ticketId: number;
+            status: components["schemas"]["TicketStatus"];
+            /** @description Business minutes from arrival until closed, or until now if still open. */
+            businessMinutes: number;
         };
         SimulatedMail: {
             filename: string;
@@ -660,6 +708,71 @@ export interface operations {
             };
             400: components["responses"]["BadRequest"];
             409: components["responses"]["Conflict"];
+        };
+    };
+    getBusinessHours: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The desk's current business hours and SLA length. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BusinessHours"];
+                };
+            };
+        };
+    };
+    updateBusinessHours: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BusinessHours"];
+            };
+        };
+        responses: {
+            /** @description The saved settings. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BusinessHours"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+        };
+    };
+    getSlaReport: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Every ticket's business minutes, under the current settings. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SlaReportRow"][];
+                };
+            };
         };
     };
     listCannedReplies: {

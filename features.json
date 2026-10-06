@@ -86,7 +86,7 @@
       "acceptance/FD-07.ui.test.ts"
     ],
     "lesson": "https://stevekinney.com/courses/ai-development-setup/exemplar-subagents#junior-engineer",
-    "passes": false
+    "passes": true
   },
   {
     "id": "FD-08",

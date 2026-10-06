@@ -28,6 +28,12 @@ module.exports = {
   del: function (key) {
     store.delete(key);
   },
+  /** @param {string} prefix */
+  delPrefix: function (prefix) {
+    Array.from(store.keys()).forEach(function (key) {
+      if (key.indexOf(prefix) === 0) store.delete(key);
+    });
+  },
   clear: function () {
     store.clear();
   },
