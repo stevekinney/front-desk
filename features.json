@@ -34,7 +34,7 @@
       "acceptance/FD-03.test.ts"
     ],
     "lesson": "https://stevekinney.com/courses/ai-development-setup/exemplar-subagents#reenactor",
-    "passes": false
+    "passes": true
   },
   {
     "id": "FD-04",
