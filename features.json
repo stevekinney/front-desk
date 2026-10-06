@@ -122,7 +122,7 @@
       "acceptance/FD-10.test.ts"
     ],
     "lesson": "https://stevekinney.com/courses/ai-development-setup/exemplar-skills#ticket-dossier",
-    "passes": false
+    "passes": true
   },
   {
     "id": "FD-11",

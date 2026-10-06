@@ -8,8 +8,9 @@
  *   node legacy/export/nightly-csv.js 2026-10-05   a particular day
  *
  * Writes <exportDir>/resolved-<day>.csv. The file is picked up at 06:00 by
- * the finance team's import, which matches on the column names and on the
- * state values, so leave both alone. Runs from cron; see ops/crontab.
+ * the finance team's import (issue #142), which matches on the column names
+ * and on the `state` values. There is no `state` column any more; it is
+ * derived from `status` here, so leave the names and values alone. Runs from cron; see ops/crontab.
  */
 
 const fs = require('fs');
@@ -59,12 +60,14 @@ function csvField(value) {
  */
 function exportDay(day, cb) {
   db.all(
-    'SELECT t.id, c.email, c.name, t.subject, t.state, t.created_at, t.closed_at,' +
+    'SELECT t.id, c.email, c.name, t.subject,' +
+      " CASE t.status WHEN 'open' THEN 'active' WHEN 'pending' THEN 'on_hold'" +
+      " WHEN 'closed' THEN 'resolved' END AS state, t.created_at, t.closed_at," +
       ' r.business_minutes' +
       ' FROM tickets t' +
       ' JOIN customers c ON c.id = t.customer_id' +
       ' JOIN sla_report r ON r.ticket_id = t.id' +
-      " WHERE t.state = 'resolved' AND t.closed_at IS NOT NULL" +
+      " WHERE t.status = 'closed' AND t.closed_at IS NOT NULL" +
       ' ORDER BY t.closed_at, t.id',
     [],
     function (err, rows) {

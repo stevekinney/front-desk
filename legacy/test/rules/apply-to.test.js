@@ -79,7 +79,7 @@ describe('applyTo', () => {
 
     await applyTo(ticket.id, message);
 
-    const [row] = await all('SELECT status, state FROM tickets WHERE id = ?', [ticket.id]);
-    expect(row).toEqual({ status: 'open', state: 'active' });
+    const [row] = await all('SELECT status FROM tickets WHERE id = ?', [ticket.id]);
+    expect(row).toEqual({ status: 'open' });
   });
 });

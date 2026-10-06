@@ -109,6 +109,24 @@ describe('PATCH /api/tickets/:id/status', () => {
   });
 });
 
+describe('status without a state column', () => {
+  it('has no tickets.state column and still moves through every status', async () => {
+    expect(
+      desk.db.prepare("SELECT 1 FROM pragma_table_info('tickets') WHERE name = 'state'").get(),
+    ).toBeUndefined();
+
+    const id = await desk.receive({ from: 'cycle@example.com', subject: 'Cycle' });
+    for (const status of ['pending', 'closed', 'open'] as const) {
+      const res = await request(desk.app)
+        .patch(`/api/tickets/${id}/status`)
+        .send({ status })
+        .expect(200);
+      expect((res.body as Ticket).status).toBe(status);
+      expect((res.body as Ticket).closedAt === null).toBe(status !== 'closed');
+    }
+  });
+});
+
 describe('PUT /api/tickets/:id/assignee', () => {
   it('assigns and unassigns', async () => {
     const id = await desk.receive({ from: 'gus@example.com', subject: 'Assign me' });

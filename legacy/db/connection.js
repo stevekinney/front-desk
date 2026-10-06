@@ -107,7 +107,34 @@ function all(sql, params, cb) {
 }
 
 /**
- * Create any missing tables.
+ * SQLite has no ADD/DROP COLUMN IF EXISTS, so ask the catalog first.
+ *
+ * @param {any} conn
+ * @param {string} table
+ * @param {string} column
+ * @returns {boolean}
+ */
+function hasColumn(conn, table, column) {
+  return (
+    conn.prepare('SELECT 1 FROM pragma_table_info(?) WHERE name = ?').get(table, column) !==
+    undefined
+  );
+}
+
+/**
+ * Bring databases created by an older release up to the current shape.
+ * schema.sql only creates what is missing; changes to existing tables go here,
+ * each guarded so it is safe to run on every startup.
+ *
+ * @param {any} conn
+ */
+function upgrade(conn) {
+  // FD-10: `state` was folded into `status`. The finance export derives it now.
+  if (hasColumn(conn, 'tickets', 'state')) conn.exec('ALTER TABLE tickets DROP COLUMN state');
+}
+
+/**
+ * Create any missing tables, then upgrade existing ones.
  *
  * @param {Callback} cb
  */
@@ -116,6 +143,7 @@ function migrate(cb) {
     if (err) return cb(err);
     defer(function () {
       open().exec(sql);
+      upgrade(open());
     }, cb);
   });
 }

@@ -1,6 +1,5 @@
 import { type Database } from '../database.ts';
 import { clearSlaCache, migrateLegacy, pollInbox, sendReply } from '../legacy-adapter.ts';
-import { STATE_FOR_STATUS } from '../tickets/tickets-repository.ts';
 import { cannedReplies, tags, teammates, ticketStates, vipCustomers } from './seed-data.ts';
 
 const HOUR = 60 * 60 * 1000;
@@ -62,11 +61,10 @@ export async function seedDatabase(db: Database, now: Date = new Date()): Promis
       closedAt ?? new Date(createdAt.getTime() + Math.min(state.ageHours / 2, 24) * HOUR);
     db.prepare(
       `UPDATE tickets
-          SET status = ?, state = ?, assignee_id = ?, created_at = ?, updated_at = ?, closed_at = ?
+          SET status = ?, assignee_id = ?, created_at = ?, updated_at = ?, closed_at = ?
         WHERE id = ?`,
     ).run(
       state.status,
-      STATE_FOR_STATUS[state.status],
       state.assignee ? teammateId(state.assignee) : null,
       createdAt.toISOString(),
       lastActivity.toISOString(),

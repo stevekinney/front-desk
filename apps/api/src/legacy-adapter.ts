@@ -109,7 +109,7 @@ export function clearSlaCache(id: number): void {
 }
 
 /**
- * Change a ticket's status through the mailroom's model, which pairs `state`,
+ * Change a ticket's status through the mailroom's model, which
  * stamps `closed_at`, logs SLA pauses and clears the cached SLA. Resolves null
  * when the ticket doesn't exist.
  */

@@ -64,7 +64,7 @@ describe('Ticket', () => {
     const where = promisify(TicketPause.where);
 
     const pending = await promisify(Ticket.updateStatus)(ticket.id, 'pending');
-    expect(pending.state).toBe('on_hold');
+    expect(pending.status).toBe('pending');
     let pauses = await where({ ticket_id: ticket.id });
     expect(pauses).toHaveLength(1);
     expect(pauses[0].ended_at).toBeNull();

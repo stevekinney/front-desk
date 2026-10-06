@@ -11,6 +11,7 @@ process.env.FRONT_DESK_DB = path.join(dir, 'front-desk.db');
 process.env.MAILROOM_INBOX = path.join(dir, 'inbox');
 process.env.MAILROOM_LOCK = path.join(dir, 'mailroom.lock');
 // The automation rules have their own tests; keep them out of everything else.
+process.env.FINANCE_EXPORT_DIR = path.join(dir, 'exports');
 process.env.MAILROOM_RULES = 'off';
 process.env.MAILROOM_FIXTURES = path.resolve(import.meta.dirname, '../../fixtures/mail');
 

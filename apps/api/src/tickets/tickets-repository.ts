@@ -98,13 +98,6 @@ export function teammateExists(db: Database, id: number): boolean {
   return db.prepare('SELECT 1 FROM teammates WHERE id = ?').get(id) !== undefined;
 }
 
-/** The mailroom's names for each status, from before `status` existed. */
-export const STATE_FOR_STATUS: Record<TicketStatus, string> = {
-  open: 'active',
-  pending: 'on_hold',
-  closed: 'resolved',
-};
-
 export function assignTicket(db: Database, ticketId: number, teammateId: number | null): void {
   db.prepare('UPDATE tickets SET assignee_id = ?, updated_at = ? WHERE id = ?').run(
     teammateId,
