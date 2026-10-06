@@ -10,3 +10,8 @@ inbox/drop-*
 .env.local
 exports/
 .vitest/
+e2e/.results/
+playwright-report/
+.claude/worktrees/
+.claude/settings.local.json
+.playwright-cli/

@@ -4,5 +4,5 @@
     "types": ["node"],
     "allowImportingTsExtensions": true
   },
-  "include": ["scripts", "vitest.config.ts", "eslint.config.js"]
+  "include": ["scripts", "vitest.config.ts", "eslint.config.js", "e2e"]
 }

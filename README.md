@@ -82,6 +82,7 @@ in parallel.
 | `npm run check`                  | Lint, formatting, typecheck, generated-file drift, unit tests. CI runs this.   |
 | `npm run smoke`                  | Unit tests as CI runs them, compared with `KNOWN_FAILURES.md`                  |
 | `npm test`                       | Vitest: the `api`, `web`, and `legacy` projects, in default order              |
+| `npm run e2e`                    | Playwright browser tests in `e2e/`, against their own throwaway desk           |
 | `npm run feature:check -- <id>`  | Run a backlog item's acceptance tests and record the result in `features.json` |
 | `npm run typecheck`              | TypeScript, every workspace                                                    |
 | `npm run lint`                   | ESLint                                                                         |
