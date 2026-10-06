@@ -1,0 +1,12 @@
+{
+  "messageId": "<20260919.0015.refund-status@mail.fernhollow.example>",
+  "inReplyTo": "<20260914.0002.double-charge@mail.fernhollow.example>",
+  "from": {
+    "name": "Maya Kowalski",
+    "email": "maya.k@fernhollow.example"
+  },
+  "to": "help@frontdesk.example",
+  "subject": "Re: Charged twice for one order",
+  "date": "2026-09-19T13:45:00Z",
+  "text": "Hi again, any update on the duplicate charge? It's still showing on my statement.\n\nMaya"
+}

@@ -1,0 +1,12 @@
+{
+  "messageId": "<20260921.0017.rush-order@mail.nairconsulting.example>",
+  "inReplyTo": null,
+  "from": {
+    "name": "Priyanka Nair",
+    "email": "priyanka@nairconsulting.example"
+  },
+  "to": "help@frontdesk.example",
+  "subject": "Can you rush 200 brochures?",
+  "date": "2026-09-21T13:05:00Z",
+  "text": "Is it possible to get 200 tri-fold brochures printed and delivered to Austin by Thursday? I'm happy to pay for rush production and overnight shipping.\n\nPriyanka"
+}

@@ -1,0 +1,12 @@
+{
+  "messageId": "<20260923.0023.account-merge@mail.weissbakery.example>",
+  "inReplyTo": null,
+  "from": {
+    "name": "Jonah Weiss",
+    "email": "jonah@weissbakery.example"
+  },
+  "to": "help@frontdesk.example",
+  "subject": "Two accounts, one business",
+  "date": "2026-09-23T15:05:00Z",
+  "text": "Somehow we ended up with two accounts, one under jonah@weissbakery.example and one under orders@weissbakery.example. Can you merge them so our order history is in one place?\n\nJonah"
+}

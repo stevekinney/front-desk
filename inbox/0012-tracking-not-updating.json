@@ -1,0 +1,12 @@
+{
+  "messageId": "<20260918.0012.tracking-not-updating@mail.example.com>",
+  "inReplyTo": null,
+  "from": {
+    "name": "Samuel Adeyemi",
+    "email": "sam.adeyemi@example.com"
+  },
+  "to": "help@frontdesk.example",
+  "subject": "Tracking hasn't moved in 5 days",
+  "date": "2026-09-18T13:10:00Z",
+  "text": "My order PP-20402 has said \"Label created\" for five days. Has it actually shipped?\n\nSam"
+}

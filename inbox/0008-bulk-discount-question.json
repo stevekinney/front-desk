@@ -1,0 +1,12 @@
+{
+  "messageId": "<20260916.0008.bulk-discount-question@mail.okoroevents.example>",
+  "inReplyTo": null,
+  "from": {
+    "name": "Hannah Okoro",
+    "email": "hannah@okoroevents.example"
+  },
+  "to": "help@frontdesk.example",
+  "subject": "Discount for 5,000 flyers?",
+  "date": "2026-09-16T19:15:00Z",
+  "text": "Hi! We run a few community events a year and need about 5,000 flyers each time. Do you offer volume pricing above what the calculator shows?\n\nHannah"
+}

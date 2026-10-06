@@ -1,0 +1,12 @@
+{
+  "messageId": "<20260922.0020.checkout-error@mail.raoarch.example>",
+  "inReplyTo": null,
+  "from": {
+    "name": "Nikhil Rao",
+    "email": "nikhil@raoarch.example"
+  },
+  "to": "help@frontdesk.example",
+  "subject": "Checkout says 'card declined' but bank says no",
+  "date": "2026-09-22T14:48:00Z",
+  "text": "I'm getting \"Your card was declined\" at checkout. My bank says they never saw an authorization attempt. I've tried two different cards. Is checkout broken?\n\nNikhil"
+}

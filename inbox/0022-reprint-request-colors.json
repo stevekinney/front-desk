@@ -1,0 +1,12 @@
+{
+  "messageId": "<20260923.0022.reprint-request-colors@mail.studiofischer.example>",
+  "inReplyTo": "<20260915.0004.poster-colors-off@mail.studiofischer.example>",
+  "from": {
+    "name": "Lena Fischer",
+    "email": "lena@studiofischer.example"
+  },
+  "to": "help@frontdesk.example",
+  "subject": "Re: Poster colors look washed out",
+  "date": "2026-09-23T13:20:00Z",
+  "text": "Attaching a photo next to the proof didn't seem to go through, so I'll describe it: the background should be #1F4D3A and the print is closer to #6E8B74. Happy to send the file again.\n\nLena"
+}

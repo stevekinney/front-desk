@@ -1,0 +1,12 @@
+{
+  "messageId": "<20260915.0004.poster-colors-off@mail.studiofischer.example>",
+  "inReplyTo": null,
+  "from": {
+    "name": "Lena Fischer",
+    "email": "lena@studiofischer.example"
+  },
+  "to": "help@frontdesk.example",
+  "subject": "Poster colors look washed out",
+  "date": "2026-09-15T14:22:00Z",
+  "text": "Hi there,\n\nThe A2 posters I ordered (PP-20391) look much paler than the proof. The deep green in the design came out closer to sage. I uploaded a CMYK PDF as the instructions said.\n\nIs this something you can reprint?\n\nBest,\nLena"
+}

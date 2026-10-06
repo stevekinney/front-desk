@@ -1,0 +1,12 @@
+{
+  "messageId": "<20261005.0035.calendar-misprint@mail.okoroevents.example>",
+  "inReplyTo": null,
+  "from": {
+    "name": "Hannah Okoro",
+    "email": "hannah@okoroevents.example"
+  },
+  "to": "help@frontdesk.example",
+  "subject": "Calendar has February with 31 days",
+  "date": "2026-10-05T14:25:00Z",
+  "text": "Our 2027 wall calendars (PP-20502) show February with 31 days. I used your calendar template, so I don't think it's my artwork.\n\nHannah"
+}

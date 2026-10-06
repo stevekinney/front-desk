@@ -1,0 +1,12 @@
+{
+  "messageId": "<20260925.0027.missing-items@mail.abernathyrealty.example>",
+  "inReplyTo": null,
+  "from": {
+    "name": "Ruth Abernathy",
+    "email": "ruth@abernathyrealty.example"
+  },
+  "to": "help@frontdesk.example",
+  "subject": "Only half my order arrived",
+  "date": "2026-09-25T13:15:00Z",
+  "text": "We ordered 10 yard signs and 500 door hangers (PP-20488). The box only had the yard signs. Is the rest coming separately?\n\nRuth\nAbernathy Realty"
+}

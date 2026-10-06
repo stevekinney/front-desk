@@ -1,0 +1,12 @@
+{
+  "messageId": "<20261001.0033.gift-card-not-working@mail.example.com>",
+  "inReplyTo": null,
+  "from": {
+    "name": "Bea Thornton",
+    "email": "bea.thornton@example.com"
+  },
+  "to": "help@frontdesk.example",
+  "subject": "Gift card code says invalid",
+  "date": "2026-10-01T14:10:00Z",
+  "text": "My sister gave me a Pinecone Print gift card (code PINE-7731-QX) and the site says it's invalid. It hasn't been used.\n\nBea"
+}

@@ -1,0 +1,12 @@
+{
+  "messageId": "<20260914.0001.damaged-business-cards@mail.brandtcarpentry.example>",
+  "inReplyTo": null,
+  "from": {
+    "name": "Theo Brandt",
+    "email": "theo@brandtcarpentry.example"
+  },
+  "to": "help@frontdesk.example",
+  "subject": "Business cards arrived bent",
+  "date": "2026-09-14T13:12:00Z",
+  "text": "Hi,\n\nMy order of 500 business cards showed up this morning and about a third of them are bent at the corners. The box looks like it was crushed in transit.\n\nOrder number is PP-20417. Can you send a replacement? I have a trade show on the 25th.\n\nThanks,\nTheo"
+}

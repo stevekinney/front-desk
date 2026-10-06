@@ -1,0 +1,12 @@
+{
+  "messageId": "<20260921.0018.email-change@mail.example.com>",
+  "inReplyTo": null,
+  "from": {
+    "name": "Felix Baumann",
+    "email": "felix.baumann@example.com"
+  },
+  "to": "help@frontdesk.example",
+  "subject": "Change the email on my account",
+  "date": "2026-09-21T16:33:00Z",
+  "text": "I'm moving away from this email address. Can you change my account email to felix@baumann-photo.example? I couldn't find a way to do it myself.\n\nFelix"
+}

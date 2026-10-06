@@ -78,4 +78,6 @@ Once a ticket is closed it shows whether the SLA was met.
 
 ## Data
 
-- `data/front-desk.db` is created the first time the API starts.
+- `data/front-desk.db` is created and seeded the first time the API starts.
+- `npm run reset` deletes it, removes dropped mail from `inbox/`, and seeds
+  again. Seeded ticket ages are relative to the moment you reset.

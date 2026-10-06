@@ -16,6 +16,7 @@
   "scripts": {
     "dev": "tsx scripts/dev.ts",
     "generate": "npm run generate -w @front-desk/contract",
+    "reset": "tsx scripts/reset.ts",
     "mail:drop": "node legacy/bin/mail-drop.js",
     "rules:parity": "tsx scripts/rules-parity.ts",
     "canary": "tsx scripts/canary.ts",

@@ -1,0 +1,12 @@
+{
+  "messageId": "<20260922.0019.tax-exempt@mail.riverbendschool.example>",
+  "inReplyTo": null,
+  "from": {
+    "name": "Martha Greene",
+    "email": "office@riverbendschool.example"
+  },
+  "to": "help@frontdesk.example",
+  "subject": "Tax exempt status for school orders",
+  "date": "2026-09-22T12:15:00Z",
+  "text": "Hello,\n\nRiverbend Elementary is a tax-exempt organization. We've attached our exemption certificate before but sales tax is still being charged on every order. Can you update our account and refund the tax on PP-20470?\n\nMartha Greene\nOffice Manager"
+}

@@ -1,0 +1,12 @@
+{
+  "messageId": "<20260917.0010.reply-damaged-cards@mail.brandtcarpentry.example>",
+  "inReplyTo": "<20260914.0001.damaged-business-cards@mail.brandtcarpentry.example>",
+  "from": {
+    "name": "Theo Brandt",
+    "email": "theo@brandtcarpentry.example"
+  },
+  "to": "help@frontdesk.example",
+  "subject": "Re: Business cards arrived bent",
+  "date": "2026-09-17T14:02:00Z",
+  "text": "Just checking in on this. The trade show is next week and I'd like to know if the replacement is coming.\n\nTheo"
+}

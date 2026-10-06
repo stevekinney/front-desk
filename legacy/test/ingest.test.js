@@ -138,6 +138,21 @@ describe('pollOnce', () => {
     expect(second.ticketId).not.toBe(first.ticketId);
   });
 
+  it('ingests raw .eml files', async () => {
+    fs.copyFileSync(
+      path.resolve(import.meta.dirname, '../../inbox/0037-cafe-menu-proofs.eml'),
+      path.join(config.inboxDir, '0037-cafe-menu-proofs.eml'),
+    );
+
+    await pollOnce();
+
+    const [ticket] = await all('SELECT subject FROM tickets', []);
+    expect(ticket.subject).toBe('Café menu proofs — wrong font');
+    const [message] = await all('SELECT from_name, body FROM messages', []);
+    expect(message.from_name).toBe('Zoé Marchand');
+    expect(message.body).toContain('crème brûlée');
+  });
+
   it('skips files it cannot parse and keeps going', async () => {
     fs.writeFileSync(path.join(config.inboxDir, '0001-broken.json'), '{ not json');
     deliver('0002-fine.json', { from: { email: 'ana@example.com' }, subject: 'Fine', text: 'Hi' });

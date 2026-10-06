@@ -1,0 +1,12 @@
+{
+  "messageId": "<20260930.0032.banner-grommets@mail.feldfitness.example>",
+  "inReplyTo": null,
+  "from": {
+    "name": "Marcus Feld",
+    "email": "marcus@feldfitness.example"
+  },
+  "to": "help@frontdesk.example",
+  "subject": "Banner grommets pulled out",
+  "date": "2026-09-30T13:35:00Z",
+  "text": "We hung the vinyl banner from order PP-20476 outside the gym and two grommets tore out in the first windy day. Are they supposed to be reinforced?\n\nMarcus\nFeld Fitness"
+}

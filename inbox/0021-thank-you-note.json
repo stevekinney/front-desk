@@ -1,0 +1,12 @@
+{
+  "messageId": "<20260922.0021.thank-you-note@mail.example.com>",
+  "inReplyTo": null,
+  "from": {
+    "name": "Agnes Morrow",
+    "email": "agnes.morrow@example.com"
+  },
+  "to": "help@frontdesk.example",
+  "subject": "Thank you!",
+  "date": "2026-09-22T19:30:00Z",
+  "text": "Just wanted to say the wedding invitations came out beautifully. Thank you to whoever packed them so carefully.\n\nAgnes"
+}

@@ -1,0 +1,12 @@
+{
+  "messageId": "<20260929.0031.envelope-sizes@mail.example.com>",
+  "inReplyTo": null,
+  "from": {
+    "name": "Agnes Morrow",
+    "email": "agnes.morrow@example.com"
+  },
+  "to": "help@frontdesk.example",
+  "subject": "Do you sell matching envelopes?",
+  "date": "2026-09-29T15:30:00Z",
+  "text": "Following up on my invitation order: do you sell envelopes that fit the 5x7 cards? I couldn't find them on the site.\n\nAgnes"
+}

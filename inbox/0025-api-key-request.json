@@ -1,0 +1,12 @@
+{
+  "messageId": "<20260924.0025.api-key-request@mail.beckerprints.example>",
+  "inReplyTo": null,
+  "from": {
+    "name": "Tom Becker",
+    "email": "tom@beckerprints.example"
+  },
+  "to": "help@frontdesk.example",
+  "subject": "API access for reseller account",
+  "date": "2026-09-24T13:40:00Z",
+  "text": "We resell your products through our own storefront and would like API access so orders flow through automatically. Who do we talk to?\n\nTom Becker"
+}

@@ -16,7 +16,7 @@ npm install
 npm run dev
 ```
 
-Open http://localhost:5173.
+Open http://localhost:5173. The inbox is seeded from the files in `inbox/`.
 
 To have a new email arrive:
 
@@ -35,6 +35,7 @@ Run `npm run mail:drop` with no arguments to list the fixtures.
 | `npm run typecheck`           | TypeScript, every workspace                          |
 | `npm run lint`                | ESLint                                               |
 | `npm run generate`            | Rebuild the API types from `openapi.yaml`            |
+| `npm run reset`               | Fresh database, seeded from `inbox/`                 |
 | `npm run mail:drop -- <name>` | Copy a fixture from `fixtures/mail/` into `inbox/`   |
 
 ## Layout

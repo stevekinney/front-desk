@@ -1,0 +1,12 @@
+{
+  "messageId": "<20260923.0024.delivery-signature@mail.duartetravel.example>",
+  "inReplyTo": null,
+  "from": {
+    "name": "Carmen Duarte",
+    "email": "carmen@duartetravel.example"
+  },
+  "to": "help@frontdesk.example",
+  "subject": "Package needs a signature but I'm never home",
+  "date": "2026-09-23T18:12:00Z",
+  "text": "The courier left a notice saying a signature is required. I work during the day. Can the package be left at the door or sent to a pickup point?\n\nCarmen"
+}

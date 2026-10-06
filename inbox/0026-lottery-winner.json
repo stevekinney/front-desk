@@ -1,0 +1,12 @@
+{
+  "messageId": "<20260924.0026.lottery-winner@mail.intl-lottery-board.example>",
+  "inReplyTo": null,
+  "from": {
+    "name": "Claims Department",
+    "email": "claims@intl-lottery-board.example"
+  },
+  "to": "help@frontdesk.example",
+  "subject": "You have won 1,500,000 USD",
+  "date": "2026-09-24T21:00:00Z",
+  "text": "Dear Winner,\n\nYour email address was selected in our international draw. To release your prize, send your full name, address, and bank details to our claims officer.\n\nRegards,\nClaims Department"
+}

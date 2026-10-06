@@ -1,0 +1,12 @@
+{
+  "messageId": "<20260914.0002.double-charge@mail.fernhollow.example>",
+  "inReplyTo": null,
+  "from": {
+    "name": "Maya Kowalski",
+    "email": "maya.k@fernhollow.example"
+  },
+  "to": "help@frontdesk.example",
+  "subject": "Charged twice for one order",
+  "date": "2026-09-14T15:40:00Z",
+  "text": "Hello,\n\nI placed one order (PP-20422) but my card statement shows two charges of $84.10 from Pinecone Print on the same day. Can you refund the duplicate?\n\nMaya"
+}

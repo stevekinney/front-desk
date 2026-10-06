@@ -1,0 +1,12 @@
+{
+  "messageId": "<20260916.0006.invoice-for-accounting@mail.martinezlegal.example>",
+  "inReplyTo": null,
+  "from": {
+    "name": "Rosa Martinez",
+    "email": "accounts@martinezlegal.example"
+  },
+  "to": "help@frontdesk.example",
+  "subject": "Invoice with our VAT number",
+  "date": "2026-09-16T13:30:00Z",
+  "text": "Good morning,\n\nOur accounting department needs an invoice for order PP-20398 that shows our VAT number (GB 312 4471 09). The receipt we got doesn't include it.\n\nKind regards,\nRosa Martinez\nMartinez Legal"
+}

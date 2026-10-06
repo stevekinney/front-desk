@@ -1,0 +1,12 @@
+{
+  "messageId": "<20260915.0005.change-shipping-address@mail.example.com>",
+  "inReplyTo": null,
+  "from": {
+    "name": "Owen Gallagher",
+    "email": "owen.gallagher@example.com"
+  },
+  "to": "help@frontdesk.example",
+  "subject": "Need to change shipping address",
+  "date": "2026-09-15T18:47:00Z",
+  "text": "I just realized I put my old address on order PP-20440. It hasn't shipped yet according to the tracking page. New address:\n\n44 Larch Street\nPortland, OR 97214\n\nThanks!"
+}

@@ -1,0 +1,12 @@
+{
+  "messageId": "<20260916.0007.upload-fails-large-pdf@mail.inkandpaper.example>",
+  "inReplyTo": null,
+  "from": {
+    "name": "Kenji Watanabe",
+    "email": "kenji@inkandpaper.example"
+  },
+  "to": "help@frontdesk.example",
+  "subject": "Upload stops at 99%",
+  "date": "2026-09-16T16:05:00Z",
+  "text": "When I upload my 180 MB PDF for the catalog print job, the progress bar gets to 99% and then the page shows \"Something went wrong\". Smaller files work. Is there a size limit I'm missing?\n\nKenji"
+}

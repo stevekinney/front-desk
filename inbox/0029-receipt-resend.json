@@ -1,0 +1,12 @@
+{
+  "messageId": "<20260928.0029.receipt-resend@mail.example.com>",
+  "inReplyTo": null,
+  "from": {
+    "name": "Owen Gallagher",
+    "email": "owen.gallagher@example.com"
+  },
+  "to": "help@frontdesk.example",
+  "subject": "Can you resend my receipt?",
+  "date": "2026-09-28T12:20:00Z",
+  "text": "I deleted the receipt email for PP-20440 by accident. Could you send it again?\n\nOwen"
+}

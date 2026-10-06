@@ -1,0 +1,12 @@
+{
+  "messageId": "<20260918.0013.two-factor-locked-out@mail.chendesign.example>",
+  "inReplyTo": null,
+  "from": {
+    "name": "Ivy Chen",
+    "email": "ivy@chendesign.example"
+  },
+  "to": "help@frontdesk.example",
+  "subject": "Locked out after losing my phone",
+  "date": "2026-09-18T17:30:00Z",
+  "text": "I lost my phone and with it my two-factor codes. I still have access to this email address. How do I get back into my account? I have three orders in progress.\n\nIvy Chen\nChen Design Studio"
+}

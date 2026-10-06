@@ -1,0 +1,12 @@
+{
+  "messageId": "<20260928.0030.print-club-billing@mail.russoceramics.example>",
+  "inReplyTo": null,
+  "from": {
+    "name": "Sofia Russo",
+    "email": "sofia@russoceramics.example"
+  },
+  "to": "help@frontdesk.example",
+  "subject": "Print Club charged after I cancelled",
+  "date": "2026-09-28T14:55:00Z",
+  "text": "I cancelled Print Club on September 2nd and got a confirmation email, but I was charged $19 on the 15th. Please refund it.\n\nSofia"
+}

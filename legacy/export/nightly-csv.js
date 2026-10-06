@@ -5,7 +5,7 @@
  * Nightly export of the tickets resolved on one day.
  *
  *   node legacy/export/nightly-csv.js              yesterday, in the desk's time zone
- *   node legacy/export/nightly-csv.js 2021-09-07   a particular day
+ *   node legacy/export/nightly-csv.js 2026-10-05   a particular day
  *
  * Writes <exportDir>/resolved-<day>.csv. The file is picked up at 06:00 by
  * the finance team's import, which matches on the column names and on the

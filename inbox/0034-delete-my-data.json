@@ -1,0 +1,12 @@
+{
+  "messageId": "<20261002.0034.delete-my-data@mail.example.com>",
+  "inReplyTo": null,
+  "from": {
+    "name": "Lukas Novak",
+    "email": "lukas.novak@example.com"
+  },
+  "to": "help@frontdesk.example",
+  "subject": "Please delete my account and data",
+  "date": "2026-10-02T13:00:00Z",
+  "text": "I'd like my account and all personal data deleted, per your privacy policy. My account email is this one.\n\nLukas Novak"
+}

@@ -1,0 +1,12 @@
+{
+  "messageId": "<20260917.0009.cancel-subscription@mail.example.com>",
+  "inReplyTo": null,
+  "from": {
+    "name": "Peter Lindqvist",
+    "email": "peter.lindqvist@example.com"
+  },
+  "to": "help@frontdesk.example",
+  "subject": "Cancel my Print Club membership",
+  "date": "2026-09-17T12:40:00Z",
+  "text": "Please cancel my Print Club membership. I don't see a cancel button anywhere in my account settings.\n\nPeter"
+}

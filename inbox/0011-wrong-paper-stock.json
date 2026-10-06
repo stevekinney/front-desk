@@ -1,0 +1,12 @@
+{
+  "messageId": "<20260917.0011.wrong-paper-stock@mail.liuflorals.example>",
+  "inReplyTo": null,
+  "from": {
+    "name": "Grace Liu",
+    "email": "grace@liuflorals.example"
+  },
+  "to": "help@frontdesk.example",
+  "subject": "Wrong paper stock on my order",
+  "date": "2026-09-17T15:55:00Z",
+  "text": "I selected 16pt matte for my postcards (PP-20455) but they arrived on the thin glossy stock. The order confirmation email says matte, so I think something got mixed up on your end.\n\nGrace"
+}

@@ -1,0 +1,12 @@
+{
+  "messageId": "<20260919.0016.sticker-cut-lines@mail.ramosbrewing.example>",
+  "inReplyTo": null,
+  "from": {
+    "name": "Diego Ramos",
+    "email": "diego@ramosbrewing.example"
+  },
+  "to": "help@frontdesk.example",
+  "subject": "Stickers cut off the edge of the design",
+  "date": "2026-09-19T15:20:00Z",
+  "text": "Our die-cut stickers (PP-20461) are trimmed about 2mm inside the artwork, so the outline of our logo is missing on one side. I left the bleed you asked for.\n\nDiego\nRamos Brewing"
+}

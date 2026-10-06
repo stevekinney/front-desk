@@ -1,0 +1,12 @@
+{
+  "messageId": "<20260925.0028.proof-approval-stuck@mail.inkandpaper.example>",
+  "inReplyTo": null,
+  "from": {
+    "name": "Kenji Watanabe",
+    "email": "kenji@inkandpaper.example"
+  },
+  "to": "help@frontdesk.example",
+  "subject": "Proof approval button does nothing",
+  "date": "2026-09-25T16:42:00Z",
+  "text": "Separate from my upload issue: on order PP-20493 the \"Approve proof\" button doesn't do anything when I click it. Tried Firefox and Safari.\n\nKenji"
+}

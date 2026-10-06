@@ -1,0 +1,25 @@
+From: "Walt Henning" <walt@henninghardware.example>
+To: help@frontdesk.example
+Subject: Wrong quantity on yard signs
+Date: Tue, 6 Oct 2026 11:03:18 -0400
+Message-ID: <0a71b2e9.20261006@henninghardware.example>
+MIME-Version: 1.0
+Content-Type: multipart/alternative; boundary="b1_8d0c"
+
+--b1_8d0c
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+
+Hello,
+
+I ordered 25 yard signs (PP-20510) and the confirmation says 2. I think the
+quantity box dropped a digit. Can you fix the order before it goes to print?
+
+Walt Henning
+Henning Hardware
+
+--b1_8d0c
+Content-Type: text/html; charset="us-ascii"
+
+<p>Hello,</p><p>I ordered 25 yard signs (PP-20510) and the confirmation says 2.</p>
+--b1_8d0c--

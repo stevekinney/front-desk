@@ -1,0 +1,12 @@
+{
+  "messageId": "<20261006.0036.menu-reorder@mail.ramosbrewing.example>",
+  "inReplyTo": null,
+  "from": {
+    "name": "Diego Ramos",
+    "email": "diego@ramosbrewing.example"
+  },
+  "to": "help@frontdesk.example",
+  "subject": "Reorder our menus with one change",
+  "date": "2026-10-06T13:50:00Z",
+  "text": "We'd like to reorder the table menus from PP-20311, but with the price of the porter changed from $7 to $8. Can you do that without me re-uploading the whole file?\n\nDiego"
+}
