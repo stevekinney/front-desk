@@ -12,6 +12,7 @@ const config = require('../config');
 const cache = require('./cache');
 const clock = require('./clock');
 const Ticket = require('../models/ticket');
+const TicketPause = require('../models/ticket-pause');
 
 const MINUTE = 60 * 1000;
 const HOUR = 60 * MINUTE;
@@ -47,12 +48,12 @@ function isBusinessDay(weekday) {
 }
 
 /**
- * Is the desk staffed during this hour of the day? 9 to 5, inclusive.
+ * Is the desk staffed during this hour of the day? 9 to 5: the 17:00 hour is closed.
  *
  * @param {number} hour
  */
 function isBusinessHour(hour) {
-  return hour >= config.sla.openHour && hour <= config.sla.closeHour;
+  return hour >= config.sla.openHour && hour < config.sla.closeHour;
 }
 
 /**
@@ -118,27 +119,49 @@ function addBusinessMinutes(start, minutes) {
  * @property {string} status
  * @property {string} dueAt
  * @property {string | null} closedAt
+ * @property {string | null} pausedAt  When the pause in progress began, if pending.
  */
 
 /**
  * @typedef {Object} SlaSummary
  * @property {number} ticketId
  * @property {string} dueAt
- * @property {'on-track' | 'at-risk' | 'breached' | 'met' | 'missed'} state
- * @property {number | null} remainingMinutes  Negative once breached; null when closed.
+ * @property {'on-track' | 'at-risk' | 'breached' | 'met' | 'missed' | 'paused'} state
+ * @property {number | null} remainingMinutes  Negative once breached; null when closed; frozen while paused.
  */
 
 /**
+ * The due time counts only finished pauses; the pause in progress is reported
+ * as `pausedAt` so the due time stays stable while the ticket waits.
+ *
  * @param {any} ticket  A Ticket record or row.
+ * @param {any[]} [pauses]  The ticket's TicketPause records.
  * @returns {SlaSnapshot}
  */
-function snapshot(ticket) {
-  const due = addBusinessMinutes(new Date(ticket.created_at), config.sla.hours * 60);
+function snapshot(ticket, pauses) {
+  pauses = pauses || [];
+  let pausedMinutes = 0;
+  /** @type {string | null} */
+  let pausedAt = null;
+  pauses.forEach(function (pause) {
+    if (pause.ended_at) {
+      pausedMinutes += businessMinutesBetween(new Date(pause.started_at), new Date(pause.ended_at));
+    } else {
+      pausedAt = pause.started_at;
+    }
+  });
+  if (ticket.status !== 'pending') pausedAt = null;
+  else if (!pausedAt) pausedAt = ticket.updated_at || null;
+  const due = addBusinessMinutes(
+    new Date(ticket.created_at),
+    config.sla.hours * 60 + pausedMinutes,
+  );
   return {
     ticketId: ticket.id,
     status: ticket.status,
     dueAt: due.toISOString(),
     closedAt: ticket.closed_at || null,
+    pausedAt: pausedAt,
   };
 }
 
@@ -156,6 +179,18 @@ function summarize(snap, now) {
       dueAt: snap.dueAt,
       state: closedAt.getTime() <= due.getTime() ? 'met' : 'missed',
       remainingMinutes: null,
+    };
+  }
+  if (snap.status === 'pending' && snap.pausedAt) {
+    const pausedAt = new Date(snap.pausedAt);
+    return {
+      ticketId: snap.ticketId,
+      dueAt: snap.dueAt,
+      state: 'paused',
+      remainingMinutes:
+        pausedAt.getTime() < due.getTime()
+          ? businessMinutesBetween(pausedAt, due)
+          : -businessMinutesBetween(due, pausedAt),
     };
   }
   const remaining =
@@ -188,8 +223,11 @@ function forTicket(ticketId, cb) {
   Ticket.find(ticketId, function (err, ticket) {
     if (err) return cb(err);
     if (!ticket) return cb(null, null);
-    const snap = cache.set(key, snapshot(ticket));
-    cb(null, summarize(snap, clock.now()));
+    TicketPause.where({ ticket_id: ticketId }, function (pauseErr, pauses) {
+      if (pauseErr) return cb(pauseErr);
+      const snap = cache.set(key, snapshot(ticket, pauses));
+      cb(null, summarize(snap, clock.now()));
+    });
   });
 }
 

@@ -47,7 +47,7 @@
       "acceptance/FD-04.ui.test.ts"
     ],
     "lesson": "https://stevekinney.com/courses/ai-development-setup/patterns-for-deciding-what-to-build#fault-localization-first",
-    "passes": false
+    "passes": true
   },
   {
     "id": "FD-05",

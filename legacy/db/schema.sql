@@ -68,6 +68,24 @@ CREATE VIEW IF NOT EXISTS sla_report AS
          ) AS business_minutes
     FROM tickets t;
 
+-- Each stretch a ticket spent pending (waiting on the customer). The SLA clock
+-- stops for the business minutes these intervals cover. An open stretch has no
+-- ended_at.
+CREATE TABLE IF NOT EXISTS ticket_pauses (
+  id          INTEGER PRIMARY KEY AUTOINCREMENT,
+  ticket_id   INTEGER NOT NULL REFERENCES tickets (id),
+  started_at  TEXT NOT NULL,
+  ended_at    TEXT
+);
+
+CREATE INDEX IF NOT EXISTS ticket_pauses_ticket ON ticket_pauses (ticket_id);
+
+-- Tickets that were already pending before pauses were recorded.
+INSERT INTO ticket_pauses (ticket_id, started_at)
+  SELECT id, updated_at FROM tickets t
+   WHERE status = 'pending'
+     AND NOT EXISTS (SELECT 1 FROM ticket_pauses p WHERE p.ticket_id = t.id AND p.ended_at IS NULL);
+
 -- Files the poller has already turned into tickets.
 CREATE TABLE IF NOT EXISTS mailroom_seen (
   filename    TEXT PRIMARY KEY,

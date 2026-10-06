@@ -13,7 +13,7 @@ type Callback<T> = (err: Error | null, result?: T) => void;
 export interface LegacySlaSummary {
   ticketId: number;
   dueAt: string;
-  state: 'on-track' | 'at-risk' | 'breached' | 'met' | 'missed';
+  state: 'on-track' | 'at-risk' | 'breached' | 'met' | 'missed' | 'paused';
   remainingMinutes: number | null;
 }
 
@@ -26,7 +26,10 @@ export interface LegacyDelivery {
 interface LegacyMailroom {
   config: { dbPath: string; inboxDir: string; fixturesDir: string };
   db: { migrate(cb: Callback<void>): void; close(): void };
-  cache: { clear(): void };
+  cache: { clear(): void; del(key: string): void };
+  models: {
+    Ticket: { updateStatus(id: number, status: string, cb: Callback<unknown | null>): void };
+  };
   sla: { forTicket(ticketId: number, cb: Callback<LegacySlaSummary | null>): void };
   poller: {
     pollOnce(cb: Callback<LegacyDelivery[]>): void;
@@ -70,6 +73,21 @@ export function closeLegacy(): void {
 export const getSla = promisify(mailroom.sla.forTicket) as (
   ticketId: number,
 ) => Promise<LegacySlaSummary | null>;
+
+/** Drop a ticket's cached SLA after a write that bypassed the Ticket model. */
+export function clearSlaCache(id: number): void {
+  mailroom.cache.del('sla:' + id);
+}
+
+/**
+ * Change a ticket's status through the mailroom's model, which pairs `state`,
+ * stamps `closed_at`, logs SLA pauses and clears the cached SLA. Resolves null
+ * when the ticket doesn't exist.
+ */
+export const updateTicketStatus = promisify(mailroom.models.Ticket.updateStatus) as (
+  id: number,
+  status: string,
+) => Promise<unknown | null>;
 
 /**
  * Record a reply on the ticket and queue it in the outbox. Resolves with the

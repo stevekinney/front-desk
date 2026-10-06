@@ -26,6 +26,12 @@ function setup() {
     .on('GET', '/tickets?status=open', [
       makeTicket({ id: 1, subject: 'Charged twice', tags: [billing], assignee: priya }),
       makeTicket({
+        id: 4,
+        subject: 'Waiting on photos',
+        status: 'pending',
+        sla: { dueAt: '2026-10-06T20:00:00.000Z', state: 'paused', remainingMinutes: 300 },
+      }),
+      makeTicket({
         id: 2,
         subject: 'Upload stops at 99%',
         customer: { id: 2, name: 'Kenji', email: 'kenji@example.com', vip: true },
@@ -55,6 +61,9 @@ describe('InboxPage', () => {
     expect(within(second).getByText('VIP')).toBeInTheDocument();
     expect(within(second).getByText('Overdue 2h')).toBeInTheDocument();
     expect(within(second).getByText(/Unassigned/)).toBeInTheDocument();
+
+    const paused = within(list).getByText('Waiting on photos').closest('a') as HTMLElement;
+    expect(within(paused).getByText(/^Paused/)).toHaveClass('sla-paused');
   });
 
   it('switches status from the sidebar', async () => {

@@ -6,6 +6,7 @@ import { migrate, require } from './helpers.js';
 const cache = require('../lib/cache');
 const Customer = require('../models/customer');
 const Ticket = require('../models/ticket');
+const TicketPause = require('../models/ticket-pause');
 
 const create = (Model, attrs) => promisify(Model.create)(attrs);
 
@@ -55,6 +56,26 @@ describe('Ticket', () => {
 
     const reopened = await promisify(Ticket.updateStatus)(ticket.id, 'open');
     expect(reopened.closed_at).toBeNull();
+  });
+
+  it('logs a pause when a ticket goes pending and closes it when it leaves', async () => {
+    const customer = await create(Customer, { email: 'pause@example.com' });
+    const ticket = await create(Ticket, { subject: 'Pause', customer_id: customer.id });
+    const where = promisify(TicketPause.where);
+
+    const pending = await promisify(Ticket.updateStatus)(ticket.id, 'pending');
+    expect(pending.state).toBe('on_hold');
+    let pauses = await where({ ticket_id: ticket.id });
+    expect(pauses).toHaveLength(1);
+    expect(pauses[0].ended_at).toBeNull();
+
+    await promisify(Ticket.updateStatus)(ticket.id, 'pending');
+    expect(await where({ ticket_id: ticket.id })).toHaveLength(1);
+
+    await promisify(Ticket.updateStatus)(ticket.id, 'open');
+    pauses = await where({ ticket_id: ticket.id });
+    expect(pauses).toHaveLength(1);
+    expect(pauses[0].ended_at).not.toBeNull();
   });
 
   it('rejects an unknown status', async () => {

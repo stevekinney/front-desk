@@ -105,16 +105,6 @@ export const STATE_FOR_STATUS: Record<TicketStatus, string> = {
   closed: 'resolved',
 };
 
-export function setTicketStatus(db: Database, ticketId: number, status: TicketStatus): void {
-  const at = now();
-  db.prepare(
-    `UPDATE tickets
-        SET status = ?, state = ?, updated_at = ?,
-            closed_at = CASE WHEN ? = 'closed' THEN coalesce(closed_at, ?) ELSE NULL END
-      WHERE id = ?`,
-  ).run(status, STATE_FOR_STATUS[status], at, status, at, ticketId);
-}
-
 export function assignTicket(db: Database, ticketId: number, teammateId: number | null): void {
   db.prepare('UPDATE tickets SET assignee_id = ?, updated_at = ? WHERE id = ?').run(
     teammateId,

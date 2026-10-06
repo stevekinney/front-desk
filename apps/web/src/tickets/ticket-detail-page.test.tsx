@@ -27,6 +27,21 @@ describe('TicketDetailPage', () => {
     expect(screen.getByText('Due in 5h')).toBeInTheDocument();
   });
 
+  it('shows a paused badge for a pending ticket', async () => {
+    setup().on(
+      'GET',
+      '/tickets/1',
+      makeTicketDetail({
+        status: 'pending',
+        sla: { dueAt: '2026-10-06T20:00:00.000Z', state: 'paused', remainingMinutes: 300 },
+      }),
+    );
+    renderApp('/tickets/1');
+
+    expect(await screen.findByText(/^Paused/)).toBeInTheDocument();
+    expect(screen.queryByText(/^Due in/)).not.toBeInTheDocument();
+  });
+
   it('sends a reply as the current teammate', async () => {
     const reply: Message = {
       id: 11,

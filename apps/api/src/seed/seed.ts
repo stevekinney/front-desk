@@ -1,5 +1,5 @@
 import { type Database } from '../database.ts';
-import { migrateLegacy, pollInbox, sendReply } from '../legacy-adapter.ts';
+import { clearSlaCache, migrateLegacy, pollInbox, sendReply } from '../legacy-adapter.ts';
 import { STATE_FOR_STATUS } from '../tickets/tickets-repository.ts';
 import { cannedReplies, tags, teammates, ticketStates, vipCustomers } from './seed-data.ts';
 
@@ -73,6 +73,14 @@ export async function seedDatabase(db: Database, now: Date = new Date()): Promis
       closedAt?.toISOString() ?? null,
       ticketId,
     );
+    db.prepare('DELETE FROM ticket_pauses WHERE ticket_id = ?').run(ticketId);
+    if (state.status === 'pending') {
+      db.prepare('INSERT INTO ticket_pauses (ticket_id, started_at) VALUES (?, ?)').run(
+        ticketId,
+        lastActivity.toISOString(),
+      );
+    }
+    clearSlaCache(ticketId);
     spreadMessages(db, ticketId, createdAt, lastActivity);
   }
 

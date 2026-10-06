@@ -22,6 +22,12 @@ export function slaLabel(sla: Sla): string {
       return sla.remainingMinutes
         ? `Overdue ${formatBusinessMinutes(sla.remainingMinutes)}`
         : 'Overdue';
+    case 'paused': {
+      const remaining = sla.remainingMinutes ?? 0;
+      return remaining < 0
+        ? `Paused · overdue ${formatBusinessMinutes(remaining)}`
+        : `Paused · ${formatBusinessMinutes(remaining)} left`;
+    }
     default:
       return `Due in ${formatBusinessMinutes(sla.remainingMinutes ?? 0)}`;
   }
@@ -31,7 +37,11 @@ export function SlaBadge({ sla }: { sla: Sla }) {
   return (
     <span
       className={`badge sla sla-${sla.state}`}
-      title={`Due ${new Date(sla.dueAt).toLocaleString()} (business hours)`}
+      title={
+        sla.state === 'paused'
+          ? 'Waiting on the customer; the SLA clock is paused'
+          : `Due ${new Date(sla.dueAt).toLocaleString()} (business hours)`
+      }
     >
       {slaLabel(sla)}
     </span>

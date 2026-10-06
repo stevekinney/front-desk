@@ -4,14 +4,13 @@ import type { Message, Ticket, TicketDetail } from '@front-desk/contract';
 
 import type { Database } from '../database.ts';
 import { HttpError, idParam, notFound, parse } from '../http.ts';
-import { sendReply } from '../legacy-adapter.ts';
+import { sendReply, updateTicketStatus } from '../legacy-adapter.ts';
 import {
   assignTicket,
   findMessage,
   findTicketRecord,
   listMessages,
   listTicketRecords,
-  setTicketStatus,
   teammateExists,
   ticketExists,
 } from './tickets-repository.ts';
@@ -49,7 +48,7 @@ export function ticketsRouter(db: Database): Router {
     const id = parse(idParam, req.params.ticketId);
     const { status } = parse(updateStatusSchema, req.body);
     if (!ticketExists(db, id)) throw notFound('Ticket');
-    setTicketStatus(db, id, status);
+    await updateTicketStatus(id, status);
     res.json(await loadTicket(id));
   });
 

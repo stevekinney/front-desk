@@ -271,8 +271,8 @@ export interface components {
             /** Format: date-time */
             dueAt: string;
             /** @enum {string} */
-            state: "on-track" | "at-risk" | "breached" | "met" | "missed";
-            /** @description Business minutes until due. Negative once breached. Null when closed. */
+            state: "on-track" | "at-risk" | "breached" | "met" | "missed" | "paused";
+            /** @description Business minutes until due. Negative once breached. Null when closed. Frozen at the value it had when the ticket went pending while the state is paused. */
             remainingMinutes: number | null;
         };
         Ticket: {

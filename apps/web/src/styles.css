@@ -223,6 +223,11 @@ textarea {
   color: var(--warn);
 }
 
+.sla-paused {
+  background: #edf2f7;
+  color: #4a5568;
+}
+
 .sla-breached,
 .sla-missed {
   background: #fff5f5;

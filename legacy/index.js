@@ -20,6 +20,7 @@ const Message = require('./models/message');
 const OutboxEntry = require('./models/outbox-entry');
 const Teammate = require('./models/teammate');
 const Ticket = require('./models/ticket');
+const TicketPause = require('./models/ticket-pause');
 
 module.exports = {
   config: config,
@@ -36,5 +37,6 @@ module.exports = {
     OutboxEntry: OutboxEntry,
     Teammate: Teammate,
     Ticket: Ticket,
+    TicketPause: TicketPause,
   },
 };

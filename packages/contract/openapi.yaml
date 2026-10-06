@@ -453,10 +453,12 @@ components:
           format: date-time
         state:
           type: string
-          enum: [on-track, at-risk, breached, met, missed]
+          enum: [on-track, at-risk, breached, met, missed, paused]
         remainingMinutes:
           type: [integer, 'null']
-          description: Business minutes until due. Negative once breached. Null when closed.
+          description: >-
+            Business minutes until due. Negative once breached. Null when closed.
+            Frozen at the value it had when the ticket went pending while the state is paused.
 
     Ticket:
       type: object

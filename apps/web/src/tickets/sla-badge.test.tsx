@@ -39,6 +39,18 @@ describe('SlaBadge', () => {
     expect(screen.getByText('Overdue')).toHaveClass('sla-breached');
   });
 
+  it('says paused with the frozen time left', () => {
+    render(<SlaBadge sla={{ dueAt, state: 'paused', remainingMinutes: 360 }} />);
+    const badge = screen.getByText('Paused · 6h left');
+    expect(badge).toHaveClass('sla-paused');
+    expect(badge).toHaveAttribute('title', expect.not.stringMatching(/^Due/));
+  });
+
+  it('says paused and overdue when it was already late', () => {
+    render(<SlaBadge sla={{ dueAt, state: 'paused', remainingMinutes: -60 }} />);
+    expect(screen.getByText('Paused · overdue 1h')).toHaveClass('sla-paused');
+  });
+
   it('shows the outcome once closed', () => {
     render(<SlaBadge sla={{ dueAt, state: 'missed', remainingMinutes: null }} />);
     expect(screen.getByText('SLA missed')).toBeInTheDocument();

@@ -1,5 +1,5 @@
 import request from 'supertest';
-import { beforeAll, describe, expect, it } from 'vitest';
+import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 
 import type { Message, Ticket, TicketDetail } from '@front-desk/contract';
 
@@ -181,6 +181,59 @@ describe('POST /api/tickets/:id/replies', () => {
       .post('/api/tickets/999999/replies')
       .send({ teammateId: desk.teammateId, body: 'Hello?' })
       .expect(404);
+  });
+});
+
+describe('SLA and pending', () => {
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  const freeze = (iso: string) => {
+    vi.useFakeTimers({ toFake: ['Date'] });
+    vi.setSystemTime(new Date(iso));
+  };
+  const patch = (id: number, status: string) =>
+    request(desk.app).patch(`/api/tickets/${id}/status`).send({ status }).expect(200);
+
+  it('shows paused on the very next read after a cached read', async () => {
+    freeze('2026-10-05T13:00:00Z');
+    const id = await desk.receive({ from: 'pa@example.com', subject: 'Pause me' });
+    freeze('2026-10-05T15:00:00Z');
+    await request(desk.app).get(`/api/tickets/${id}`).expect(200);
+
+    const res = await patch(id, 'pending');
+    expect((res.body as Ticket).sla).toMatchObject({ state: 'paused', remainingMinutes: 360 });
+
+    freeze('2026-10-07T16:00:00Z');
+    const detail = await request(desk.app).get(`/api/tickets/${id}`).expect(200);
+    const list = await request(desk.app).get('/api/tickets?status=pending').expect(200);
+    const listed = (list.body as Ticket[]).find((t) => t.id === id);
+    expect((detail.body as Ticket).sla).toMatchObject({ state: 'paused', remainingMinutes: 360 });
+    expect(listed?.sla).toMatchObject({ state: 'paused', remainingMinutes: 360 });
+  });
+
+  it('moves the due time later by the business minutes spent pending', async () => {
+    freeze('2026-10-05T13:00:00Z');
+    const id = await desk.receive({ from: 'pb@example.com', subject: 'Resume me' });
+    freeze('2026-10-05T15:00:00Z');
+    await patch(id, 'pending');
+    freeze('2026-10-06T15:00:00Z');
+    const res = await patch(id, 'open');
+
+    expect((res.body as Ticket).sla.state).not.toBe('paused');
+    expect((res.body as Ticket).sla.dueAt).toBe('2026-10-06T21:00:00.000Z');
+  });
+
+  it('reports met on the next read after closing from a cached read', async () => {
+    freeze('2026-10-05T13:00:00Z');
+    const id = await desk.receive({ from: 'pc@example.com', subject: 'Close me' });
+    freeze('2026-10-05T14:00:00Z');
+    await request(desk.app).get(`/api/tickets/${id}`).expect(200);
+    await patch(id, 'closed');
+
+    const res = await request(desk.app).get(`/api/tickets/${id}`).expect(200);
+    expect((res.body as Ticket).sla.state).toBe('met');
   });
 });
 
