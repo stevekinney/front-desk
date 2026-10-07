@@ -11,6 +11,7 @@ import {
   findTicketRecord,
   listMessages,
   listTicketRecords,
+  setTicketPriority,
   teammateExists,
   ticketExists,
 } from './tickets-repository.ts';
@@ -18,6 +19,7 @@ import {
   assignSchema,
   listTicketsQuerySchema,
   replySchema,
+  updatePrioritySchema,
   updateStatusSchema,
 } from './tickets-schemas.ts';
 import { withSla } from './with-sla.ts';
@@ -49,6 +51,14 @@ export function ticketsRouter(db: Database): Router {
     const { status } = parse(updateStatusSchema, req.body);
     if (!ticketExists(db, id)) throw notFound('Ticket');
     await updateTicketStatus(id, status);
+    res.json(await loadTicket(id));
+  });
+
+  router.patch('/tickets/:ticketId/priority', async (req, res) => {
+    const id = parse(idParam, req.params.ticketId);
+    const { priority } = parse(updatePrioritySchema, req.body);
+    if (!ticketExists(db, id)) throw notFound('Ticket');
+    setTicketPriority(db, id, priority);
     res.json(await loadTicket(id));
   });
 

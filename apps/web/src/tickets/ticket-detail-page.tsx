@@ -1,14 +1,21 @@
 import { Link, useParams } from 'react-router';
 
-import type { Message, Ticket, TicketDetail, TicketStatus } from '@front-desk/contract';
+import {
+  TICKET_PRIORITIES,
+  type Message,
+  type Ticket,
+  type TicketDetail,
+  type TicketStatus,
+} from '@front-desk/contract';
 
 import { CannedReplyPicker } from '../canned-replies/canned-reply-picker.tsx';
 import { TagPicker } from '../tags/tag-picker.tsx';
 import { useCurrentTeammate } from '../teammates/current-teammate.tsx';
 import { useApi } from '../use-api.ts';
+import { PRIORITY_LABELS } from './priority-badge.tsx';
 import { ReplyForm } from './reply-form.tsx';
 import { SlaBadge } from './sla-badge.tsx';
-import { assignTicket, getTicket, updateStatus } from './tickets-api.ts';
+import { assignTicket, getTicket, updatePriority, updateStatus } from './tickets-api.ts';
 
 export function TicketDetailPage() {
   const ticketId = Number(useParams().ticketId);
@@ -73,6 +80,22 @@ export function TicketDetailPage() {
             {teammates.map((teammate) => (
               <option key={teammate.id} value={teammate.id}>
                 {teammate.name}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label>
+          Priority{' '}
+          <select
+            value={ticket.priority}
+            onChange={(event) => {
+              const priority = TICKET_PRIORITIES.find((p) => p === event.target.value);
+              if (priority) void updatePriority(ticket.id, priority).then(merge);
+            }}
+          >
+            {TICKET_PRIORITIES.map((priority) => (
+              <option key={priority} value={priority}>
+                {PRIORITY_LABELS[priority]}
               </option>
             ))}
           </select>

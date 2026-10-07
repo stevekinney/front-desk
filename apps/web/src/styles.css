@@ -207,6 +207,16 @@ textarea {
   color: #744210;
 }
 
+.priority-high {
+  background: #feebc8;
+  color: #7b341e;
+}
+
+.priority-urgent {
+  background: #fed7d7;
+  color: #742a2a;
+}
+
 .sent {
   background: #e6fffa;
   color: #234e52;

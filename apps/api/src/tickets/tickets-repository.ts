@@ -1,4 +1,4 @@
-import type { Message, Tag, Ticket, TicketStatus } from '@front-desk/contract';
+import type { Message, Tag, Ticket, TicketPriority, TicketStatus } from '@front-desk/contract';
 
 import { now, type Database } from '../database.ts';
 import { tagsForTickets } from '../tags/tags-repository.ts';
@@ -11,6 +11,7 @@ interface TicketRow {
   id: number;
   subject: string;
   status: TicketStatus;
+  priority: TicketPriority;
   created_at: string;
   updated_at: string;
   closed_at: string | null;
@@ -25,7 +26,7 @@ interface TicketRow {
 }
 
 const SELECT_TICKETS = `
-  SELECT t.id, t.subject, t.status, t.created_at, t.updated_at, t.closed_at,
+  SELECT t.id, t.subject, t.status, t.priority, t.created_at, t.updated_at, t.closed_at,
          c.id AS customer_id, c.name AS customer_name, c.email AS customer_email,
          c.vip AS customer_vip,
          tm.id AS assignee_id, tm.name AS assignee_name, tm.email AS assignee_email,
@@ -39,6 +40,7 @@ function toRecord(row: TicketRow, tags: Tag[]): TicketRecord {
     id: row.id,
     subject: row.subject,
     status: row.status,
+    priority: row.priority,
     customer: {
       id: row.customer_id,
       name: row.customer_name,
@@ -63,6 +65,10 @@ export function listTicketRecords(db: Database, query: ListTicketsQuery): Ticket
   if (query.status) {
     where.push('t.status = ?');
     params.push(query.status);
+  }
+  if (query.priority) {
+    where.push('t.priority = ?');
+    params.push(query.priority);
   }
   if (query.assigneeId) {
     where.push('t.assignee_id = ?');
@@ -101,6 +107,14 @@ export function teammateExists(db: Database, id: number): boolean {
 export function assignTicket(db: Database, ticketId: number, teammateId: number | null): void {
   db.prepare('UPDATE tickets SET assignee_id = ?, updated_at = ? WHERE id = ?').run(
     teammateId,
+    now(),
+    ticketId,
+  );
+}
+
+export function setTicketPriority(db: Database, ticketId: number, priority: TicketPriority): void {
+  db.prepare('UPDATE tickets SET priority = ?, updated_at = ? WHERE id = ?').run(
+    priority,
     now(),
     ticketId,
   );

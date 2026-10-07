@@ -23,7 +23,8 @@ CREATE TABLE IF NOT EXISTS tickets (
   status      TEXT NOT NULL DEFAULT 'open',
   created_at  TEXT NOT NULL,
   updated_at  TEXT NOT NULL,
-  closed_at   TEXT
+  closed_at   TEXT,
+  priority    TEXT NOT NULL DEFAULT 'normal' CHECK (priority IN ('low', 'normal', 'high', 'urgent'))
 );
 
 CREATE INDEX IF NOT EXISTS tickets_status ON tickets (status);

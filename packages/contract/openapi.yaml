@@ -35,6 +35,10 @@ paths:
           in: query
           schema:
             $ref: '#/components/schemas/TicketStatus'
+        - name: priority
+          in: query
+          schema:
+            $ref: '#/components/schemas/TicketPriority'
         - name: tag
           in: query
           description: Only tickets with this tag name.
@@ -86,6 +90,33 @@ paths:
               properties:
                 status:
                   $ref: '#/components/schemas/TicketStatus'
+      responses:
+        '200':
+          description: The updated ticket.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ticket'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /tickets/{ticketId}/priority:
+    parameters:
+      - $ref: '#/components/parameters/TicketId'
+    patch:
+      operationId: updateTicketPriority
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [priority]
+              properties:
+                priority:
+                  $ref: '#/components/schemas/TicketPriority'
       responses:
         '200':
           description: The updated ticket.
@@ -429,6 +460,10 @@ components:
       type: string
       enum: [open, pending, closed]
 
+    TicketPriority:
+      type: string
+      enum: [low, normal, high, urgent]
+
     Teammate:
       type: object
       required: [id, name, email]
@@ -508,6 +543,7 @@ components:
           id,
           subject,
           status,
+          priority,
           customer,
           assignee,
           tags,
@@ -524,6 +560,8 @@ components:
           type: string
         status:
           $ref: '#/components/schemas/TicketStatus'
+        priority:
+          $ref: '#/components/schemas/TicketPriority'
         customer:
           $ref: '#/components/schemas/Customer'
         assignee:

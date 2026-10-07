@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/react';
+import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
 
@@ -104,6 +104,22 @@ describe('TicketDetailPage', () => {
     expect(api.calls.filter((c) => c.method === 'PATCH').map((c) => c.body)).toEqual([
       { status: 'closed' },
       { status: 'open' },
+    ]);
+  });
+
+  it('saves a priority change right away', async () => {
+    const api = setup().on('PATCH', '/tickets/1/priority', (body) =>
+      makeTicket({ priority: (body as { priority: 'urgent' }).priority }),
+    );
+    renderApp('/tickets/1');
+
+    const select = await screen.findByLabelText('Priority');
+    expect(within(select).getAllByRole('option')).toHaveLength(4);
+    await userEvent.selectOptions(select, 'urgent');
+
+    expect(await screen.findByDisplayValue('Urgent')).toBeInTheDocument();
+    expect(api.calls.filter((c) => c.method === 'PATCH').map((c) => c.body)).toEqual([
+      { priority: 'urgent' },
     ]);
   });
 });

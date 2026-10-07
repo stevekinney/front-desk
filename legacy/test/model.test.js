@@ -1,7 +1,7 @@
 import { promisify } from 'node:util';
 import { beforeAll, describe, expect, it } from 'vitest';
 
-import { migrate, require } from './helpers.js';
+import { migrate, require, run, all } from './helpers.js';
 
 const cache = require('../lib/cache');
 const Customer = require('../models/customer');
@@ -56,6 +56,17 @@ describe('Ticket', () => {
 
     const reopened = await promisify(Ticket.updateStatus)(ticket.id, 'open');
     expect(reopened.closed_at).toBeNull();
+  });
+
+  it('leaves priority alone when the status changes', async () => {
+    const customer = await create(Customer, { email: 'prio@example.com' });
+    const ticket = await create(Ticket, { subject: 'Loud', customer_id: customer.id });
+    await run("UPDATE tickets SET priority = 'high' WHERE id = ?", [ticket.id]);
+
+    await promisify(Ticket.updateStatus)(ticket.id, 'closed');
+
+    const rows = await all('SELECT priority FROM tickets WHERE id = ?', [ticket.id]);
+    expect(rows).toEqual([{ priority: 'high' }]);
   });
 
   it('logs a pause when a ticket goes pending and closes it when it leaves', async () => {

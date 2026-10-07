@@ -73,6 +73,24 @@ export interface paths {
         patch: operations["updateTicketStatus"];
         trace?: never;
     };
+    "/tickets/{ticketId}/priority": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                ticketId: components["parameters"]["TicketId"];
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["updateTicketPriority"];
+        trace?: never;
+    };
     "/tickets/{ticketId}/assignee": {
         parameters: {
             query?: never;
@@ -274,6 +292,8 @@ export interface components {
         };
         /** @enum {string} */
         TicketStatus: "open" | "pending" | "closed";
+        /** @enum {string} */
+        TicketPriority: "low" | "normal" | "high" | "urgent";
         Teammate: {
             id: number;
             name: string;
@@ -311,6 +331,7 @@ export interface components {
             id: number;
             subject: string;
             status: components["schemas"]["TicketStatus"];
+            priority: components["schemas"]["TicketPriority"];
             customer: components["schemas"]["Customer"];
             assignee: components["schemas"]["Teammate"] | null;
             tags: components["schemas"]["Tag"][];
@@ -447,6 +468,7 @@ export interface operations {
         parameters: {
             query?: {
                 status?: components["schemas"]["TicketStatus"];
+                priority?: components["schemas"]["TicketPriority"];
                 /** @description Only tickets with this tag name. */
                 tag?: string;
                 assigneeId?: number;
@@ -505,6 +527,36 @@ export interface operations {
             content: {
                 "application/json": {
                     status: components["schemas"]["TicketStatus"];
+                };
+            };
+        };
+        responses: {
+            /** @description The updated ticket. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Ticket"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            404: components["responses"]["NotFound"];
+        };
+    };
+    updateTicketPriority: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                ticketId: components["parameters"]["TicketId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    priority: components["schemas"]["TicketPriority"];
                 };
             };
         };

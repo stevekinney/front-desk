@@ -131,6 +131,12 @@ function hasColumn(conn, table, column) {
 function upgrade(conn) {
   // FD-10: `state` was folded into `status`. The finance export derives it now.
   if (hasColumn(conn, 'tickets', 'state')) conn.exec('ALTER TABLE tickets DROP COLUMN state');
+  // FD-06: priority is API-owned; the Ticket model deliberately doesn't list it.
+  if (!hasColumn(conn, 'tickets', 'priority')) {
+    conn.exec(
+      "ALTER TABLE tickets ADD COLUMN priority TEXT NOT NULL DEFAULT 'normal' CHECK (priority IN ('low', 'normal', 'high', 'urgent'))",
+    );
+  }
 }
 
 /**

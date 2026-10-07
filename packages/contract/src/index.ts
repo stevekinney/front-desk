@@ -21,6 +21,7 @@ export type TagInput = Schemas['TagInput'];
 export type Teammate = Schemas['Teammate'];
 export type Ticket = Schemas['Ticket'];
 export type TicketDetail = Schemas['TicketDetail'];
+export type TicketPriority = Schemas['TicketPriority'];
 export type TicketStatus = Schemas['TicketStatus'];
 
 export const TICKET_STATUSES = [
@@ -28,3 +29,10 @@ export const TICKET_STATUSES = [
   'pending',
   'closed',
 ] as const satisfies readonly TicketStatus[];
+
+export const TICKET_PRIORITIES = [
+  'low',
+  'normal',
+  'high',
+  'urgent',
+] as const satisfies readonly TicketPriority[];

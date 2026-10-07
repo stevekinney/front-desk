@@ -61,6 +61,7 @@ export function makeTicket(overrides: Partial<Ticket> = {}): Ticket {
     id: 1,
     subject: 'Business cards arrived bent',
     status: 'open',
+    priority: 'normal',
     customer: { id: 1, name: 'Theo Brandt', email: 'theo@example.com', vip: false },
     assignee: null,
     tags: [],

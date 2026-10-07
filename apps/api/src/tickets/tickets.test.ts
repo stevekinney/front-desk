@@ -255,6 +255,61 @@ describe('SLA and pending', () => {
   });
 });
 
+describe('ticket priority', () => {
+  const setPriority = (id: number | string, priority: string) =>
+    request(desk.app).patch(`/api/tickets/${id}/priority`).send({ priority });
+
+  it('starts every emailed ticket at normal', async () => {
+    const id = await desk.receive({ from: 'pri1@example.com', subject: 'Fresh' });
+    const res = await request(desk.app).get(`/api/tickets/${id}`).expect(200);
+    expect((res.body as Ticket).priority).toBe('normal');
+  });
+
+  it('sets the priority and returns the updated ticket', async () => {
+    const id = await desk.receive({ from: 'pri2@example.com', subject: 'Set it' });
+    const res = await setPriority(id, 'urgent').expect(200);
+    expect(res.body).toMatchObject({ id, priority: 'urgent' });
+  });
+
+  it('rejects an unknown priority, even for a missing ticket', async () => {
+    const id = await desk.receive({ from: 'pri3@example.com', subject: 'Bad value' });
+    const res = await setPriority(id, 'critical').expect(400);
+    expect(res.body.issues[0].path).toBe('priority');
+    await setPriority(999999, 'critical').expect(400);
+  });
+
+  it('404s for an unknown ticket', async () => {
+    await setPriority(999999, 'high').expect(404);
+  });
+
+  it('survives status and assignee changes', async () => {
+    const id = await desk.receive({ from: 'pri4@example.com', subject: 'Sticky' });
+    await setPriority(id, 'high').expect(200);
+    await request(desk.app)
+      .patch(`/api/tickets/${id}/status`)
+      .send({ status: 'closed' })
+      .expect(200);
+    const res = await request(desk.app)
+      .put(`/api/tickets/${id}/assignee`)
+      .send({ teammateId: desk.teammateId })
+      .expect(200);
+    expect((res.body as Ticket).priority).toBe('high');
+  });
+
+  it('filters the list by priority and rejects unknown values', async () => {
+    const high = await desk.receive({ from: 'pri5@example.com', subject: 'Loud' });
+    await desk.receive({ from: 'pri6@example.com', subject: 'Quiet' });
+    await setPriority(high, 'high').expect(200);
+
+    const res = await request(desk.app).get('/api/tickets?priority=high').expect(200);
+    const tickets = res.body as Ticket[];
+    expect(tickets.map((t) => t.id)).toContain(high);
+    expect(tickets.every((t) => t.priority === 'high')).toBe(true);
+
+    await request(desk.app).get('/api/tickets?priority=bogus').expect(400);
+  });
+});
+
 describe('unknown routes', () => {
   it('404s with a JSON error', async () => {
     const res = await request(desk.app).get('/api/nope').expect(404);

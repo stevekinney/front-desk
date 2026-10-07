@@ -66,6 +66,25 @@ describe('InboxPage', () => {
     expect(within(paused).getByText(/^Paused/)).toHaveClass('sla-paused');
   });
 
+  it('labels high and urgent tickets only', async () => {
+    setup().on('GET', '/tickets?status=open', [
+      makeTicket({ id: 1, subject: 'Loud', priority: 'high' }),
+      makeTicket({ id: 2, subject: 'Louder', priority: 'urgent' }),
+      makeTicket({ id: 3, subject: 'Regular', priority: 'normal' }),
+      makeTicket({ id: 4, subject: 'Whenever', priority: 'low' }),
+    ]);
+    renderApp('/');
+
+    const row = async (subject: string) =>
+      (await screen.findByText(subject)).closest('a') as HTMLElement;
+    expect(within(await row('Loud')).getByText('High')).toBeInTheDocument();
+    expect(within(await row('Louder')).getByText('Urgent')).toBeInTheDocument();
+    for (const subject of ['Regular', 'Whenever']) {
+      const r = within(await row(subject));
+      expect(r.queryByText(/^(Low|Normal|High|Urgent)$/)).not.toBeInTheDocument();
+    }
+  });
+
   it('switches status from the sidebar', async () => {
     setup();
     renderApp('/');

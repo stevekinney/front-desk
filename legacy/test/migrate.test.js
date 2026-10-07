@@ -44,5 +44,11 @@ describe('migrate', () => {
       { id: 2, status: 'pending', closed_at: null },
       { id: 3, status: 'closed', closed_at: '2026-10-01T15:00:00.000Z' },
     ]);
+
+    // FD-06: the same upgrade adds priority, defaulting existing tickets to normal.
+    expect(columns.map((c) => c.name)).toContain('priority');
+    const priorities = await all('SELECT DISTINCT priority FROM tickets', []);
+    expect(priorities).toEqual([{ priority: 'normal' }]);
+    await expect(run("UPDATE tickets SET priority = 'critical'", [])).rejects.toThrow();
   });
 });

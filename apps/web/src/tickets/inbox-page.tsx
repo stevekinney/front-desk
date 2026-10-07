@@ -6,6 +6,7 @@ import { SimulateMailButton } from '../mail/simulate-mail-button.tsx';
 import { TagChip } from '../tags/tag-chip.tsx';
 import { TagSidebar } from '../tags/tag-sidebar.tsx';
 import { useApi } from '../use-api.ts';
+import { PriorityBadge } from './priority-badge.tsx';
 import { SlaBadge } from './sla-badge.tsx';
 import { listTickets } from './tickets-api.ts';
 
@@ -94,6 +95,7 @@ export function InboxPage() {
                     <TagChip key={t.id} tag={t} />
                   ))}
                 </span>
+                <PriorityBadge priority={ticket.priority} />
                 <SlaBadge sla={ticket.sla} />
               </Link>
             </li>

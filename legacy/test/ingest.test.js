@@ -54,6 +54,9 @@ describe('pollOnce', () => {
 
     expect(deliveries.map((d) => d.filename)).toEqual(['0001-hello.json', '0002-other.json']);
     const tickets = await all('SELECT subject, status FROM tickets ORDER BY id', []);
+    expect(await all('SELECT DISTINCT priority FROM tickets', [])).toEqual([
+      { priority: 'normal' },
+    ]);
     expect(tickets).toEqual([
       { subject: 'Hello', status: 'open' },
       { subject: 'Another', status: 'open' },
